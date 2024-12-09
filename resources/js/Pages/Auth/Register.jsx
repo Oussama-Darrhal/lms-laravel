@@ -1,24 +1,19 @@
-import InputError from '@/Components/InputError';
-import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
-import TextInput from '@/Components/TextInput';
-import GuestLayout from '@/Layouts/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import InputError from "@/Components/InputError";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { GoArrowLeft } from "react-icons/go";
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
-
-        post(route('register'), {
-            onFinish: () => reset('password', 'password_confirmation'),
+        post(route("register"), {
+            onFinish: () => reset("password", "password_confirmation"),
         });
     };
 
@@ -26,67 +21,110 @@ export default function Register() {
         <>
             <Head title="Register" />
 
-            <div className="mx-4 mt-4 flex flex-col">
-                <div className="flex text-xl font-bold cursor-pointer w-fit">
-                    <GoArrowLeft className="self-center" />
+            <div className="min-h-screen flex flex-col p-4">
+                <Link
+                    href="/"
+                    className="flex items-center gap-2 text-xl font-bold w-fit"
+                >
+                    <GoArrowLeft className="text-2xl" />
                     <span className="text-gray-600">HomePage</span>
-                </div>
+                </Link>
 
-                <div className="flex justify-center w-full mt-2 h-[91vh] bg-gray-200">
-                    {/* Left Half with Image */}
-                    <div className="relative w-full md:w-1/2 h-full flex items-center justify-center text-white">
-                        {/* Background Image */}
-                        <div className="absolute inset-0 bg-[url('/images/lukas-blazek-GnvurwJsKaY-unsplash.jpg')] bg-cover bg-center"></div>
-                        {/* Overlay Layer */}
-                        <div className="absolute inset-0 bg-[#1d1f53] bg-opacity-70"></div>
-                        {/* Text Content */}
-                        <div className="flex z-50 flex-col text-white self-start mt-24 w-[80%]">
-                            <h3 className="text-3xl md:text-5xl font-bold mb-6 leading-normal">
+                <div className="flex flex-col md:flex-row flex-1 mt-4 bg-gray-200">
+                    {/* Left Half - Image Section */}
+                    <div className="relative w-full md:w-1/2 min-h-[300px] md:h-auto">
+                        <div className="absolute inset-0 bg-[url('/images/lukas-blazek-GnvurwJsKaY-unsplash.jpg')] bg-cover bg-center" />
+                        <div className="absolute inset-0 bg-[#1d1f53] bg-opacity-70" />
+                        <div className="relative z-10 p-8 md:p-12 h-full flex flex-col justify-center">
+                            <h3 className="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
                                 Discover the Power of Learning
                             </h3>
-                            <p className="text-sm text-gray-200 leading-loose w-[80%] md:w-[70%]">
-                                Unlock your potential with our platform. Join today to access tailored courses, expert guidance, and a vibrant learning community.
+                            <p className="text-sm md:text-base text-gray-200 leading-relaxed max-w-lg">
+                                Unlock your potential with our platform. Join
+                                today to access tailored courses, expert
+                                guidance, and a vibrant learning community.
                             </p>
                         </div>
                     </div>
 
-                    {/* Right Half with Sign-up Form */}
-                    <div className="w-full md:w-1/2 flex flex-col justify-center items-center bg-[#1d1f53] px-6 sm:px-16 gap-4">
-                        <h1 className="text-2xl md:text-3xl font-bold text-white self-start">Register</h1>
-                        <span className="text-base font-light text-gray-300 mb-4 text-center">
-                            Create an account to access exclusive content, track your progress, and join a community of learners.
-                        </span>
-                        <form onSubmit={submit} className="w-full flex flex-col gap-4">
-                            <input
-                                type="text"
-                                placeholder="Full Name"
-                                className="border border-gray-600 rounded-lg p-4 px-6 focus:ring-[#fcd881] focus:outline-0 focus:border-[#fcd881] bg-[#1d1f53]"
-                            />
-                            <input
-                                type="email"
-                                placeholder="Email"
-                                className="border border-gray-600 rounded-lg p-4 px-6 focus:ring-[#fcd881] focus:outline-0 focus:border-[#fcd881] bg-[#1d1f53]"
-                            />
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                className="border border-gray-600 rounded-lg p-4 px-6 focus:ring-[#fcd881] focus:outline-0 focus:border-[#fcd881] bg-[#1d1f53]"
-                            />
-                            <input
-                                type="password"
-                                placeholder="Confirm Password"
-                                className="border border-gray-600 rounded-lg p-4 px-6 focus:ring-[#fcd881] focus:outline-0 focus:border-[#fcd881] bg-[#1d1f53]"
-                            />
-                            <button
-                                type="submit"
-                                className="bg-[#fcd881] mt-6 text-[#1d1f53] font-bold p-4 rounded-lg hover:bg-[#fcd881]"
-                            >
-                                Sign Up
-                            </button>
-                            <span className="text-center text-white">
-                                Already Have An Account? <Link className="text-[#fcd881] underline">Login Here!</Link>
-                            </span>
-                        </form>
+                    {/* Right Half - Form Section */}
+                    <div className="w-full md:w-1/2 bg-[#1d1f53] p-6 md:p-12 flex flex-col justify-center">
+                        <div className="max-w-md w-full mx-auto">
+                            <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                                Register
+                            </h1>
+                            <p className="text-sm md:text-base text-gray-300 mb-8">
+                                Create an account to access exclusive content,
+                                track your progress, and join a community of
+                                learners.
+                            </p>
+                            <form onSubmit={submit} className="space-y-4">
+                                <input
+                                    type="text"
+                                    placeholder="Full Name"
+                                    className="w-full border border-gray-600 rounded-lg p-3 md:p-4 text-white placeholder-gray-400 focus:ring-[#fcd881] focus:border-[#fcd881] bg-[#1d1f53]"
+                                    onChange={(e) =>
+                                        setData("name", e.target.value)
+                                    }
+                                />
+                                <InputError
+                                    message={errors.name}
+                                    className=""
+                                />
+                                <input
+                                    type="email"
+                                    placeholder="Email"
+                                    className="w-full border border-gray-600 rounded-lg p-3 md:p-4 text-white placeholder-gray-400 focus:ring-[#fcd881] focus:border-[#fcd881] bg-[#1d1f53]"
+                                    onChange={(e) =>
+                                        setData("email", e.target.value)
+                                    }
+                                />
+                                <InputError message={errors.email} />
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    className="w-full border border-gray-600 rounded-lg p-3 md:p-4 text-white placeholder-gray-400 focus:ring-[#fcd881] focus:border-[#fcd881] bg-[#1d1f53]"
+                                    onChange={(e) =>
+                                        setData("password", e.target.value)
+                                    }
+                                />
+                                <InputError
+                                    message={errors.password}
+                                    className="mt-2"
+                                />
+
+                                <input
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    className="w-full border border-gray-600 rounded-lg p-3 md:p-4 text-white placeholder-gray-400 focus:ring-[#fcd881] focus:border-[#fcd881] bg-[#1d1f53]"
+                                    onChange={(e) =>
+                                        setData(
+                                            "password_confirmation",
+                                            e.target.value
+                                        )
+                                    }
+                                />
+                                <InputError
+                                    message={errors.password_confirmation}
+                                    className="mt-2"
+                                />
+                                <button
+                                    type="submit"
+                                    className="w-full bg-[#fcd881] text-[#1d1f53] font-bold p-3 md:p-4 rounded-lg hover:bg-[#fcd881]/90 transition-colors mt-6"
+                                >
+                                    Sign Up
+                                </button>
+                                <p className="text-center text-white text-sm md:text-base mt-4">
+                                    Already Have An Account?{" "}
+                                    <Link
+                                        href="/login"
+                                        className="text-[#fcd881] underline"
+                                    >
+                                        Login Here!
+                                    </Link>
+                                </p>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
