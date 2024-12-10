@@ -8,12 +8,14 @@ export default function Register() {
         email: "",
         password: "",
         password_confirmation: "",
+        subject: "",  // New field for subject expertise
+        experience: "", // New field for teaching experience
     });
 
     const submit = (e) => {
         e.preventDefault();
         post(route("register"), {
-            onFinish: () => reset("password", "password_confirmation"),
+            onFinish: () => reset("password", "password_confirmation", "subject", "experience"),
         });
     };
 
@@ -37,12 +39,10 @@ export default function Register() {
                         <div className="absolute inset-0 bg-[#1d1f53] bg-opacity-70" />
                         <div className="relative z-10 p-8 md:p-12 h-full flex flex-col justify-center">
                             <h3 className="text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
-                                Discover the Power of Learning
+                                Discover the Power of Teaching
                             </h3>
                             <p className="text-sm md:text-base text-gray-200 leading-relaxed max-w-lg">
-                                Unlock your potential with our platform. Join
-                                today to access tailored courses, expert
-                                guidance, and a vibrant learning community.
+                                Join our platform to share your knowledge, inspire students, and make a lasting impact.
                             </p>
                         </div>
                     </div>
@@ -51,12 +51,10 @@ export default function Register() {
                     <div className="w-full md:w-1/2 bg-[#1d1f53] p-6 md:p-12 flex flex-col justify-center">
                         <div className="max-w-md w-full mx-auto">
                             <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                                Register
+                                Register as a Teacher
                             </h1>
                             <p className="text-sm md:text-base text-gray-300 mb-8">
-                                Create an account to access exclusive content,
-                                track your progress, and join a community of
-                                learners.
+                                Create an account to start teaching, share your expertise, and shape the future.
                             </p>
                             <form onSubmit={submit} className="space-y-4">
                                 <input
@@ -107,6 +105,34 @@ export default function Register() {
                                     message={errors.password_confirmation}
                                     className="mt-2"
                                 />
+
+                                {/* Teacher-specific fields */}
+                                <input
+                                    type="text"
+                                    placeholder="Subject Expertise"
+                                    className="w-full border border-gray-600 rounded-lg p-3 md:p-4 text-white placeholder-gray-400 focus:ring-[#fcd881] focus:border-[#fcd881] bg-[#1d1f53]"
+                                    onChange={(e) =>
+                                        setData("subject", e.target.value)
+                                    }
+                                />
+                                <InputError
+                                    message={errors.subject}
+                                    className="mt-2"
+                                />
+
+                                <input
+                                    type="text"
+                                    placeholder="Years of Experience"
+                                    className="w-full border border-gray-600 rounded-lg p-3 md:p-4 text-white placeholder-gray-400 focus:ring-[#fcd881] focus:border-[#fcd881] bg-[#1d1f53]"
+                                    onChange={(e) =>
+                                        setData("experience", e.target.value)
+                                    }
+                                />
+                                <InputError
+                                    message={errors.experience}
+                                    className="mt-2"
+                                />
+
                                 <button
                                     type="submit"
                                     className="w-full bg-[#fcd881] text-[#1d1f53] font-bold p-3 md:p-4 rounded-lg hover:bg-[#fcd881]/90 transition-colors mt-6"
