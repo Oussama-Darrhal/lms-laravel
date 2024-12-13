@@ -1,4 +1,6 @@
 import React from "react";
+import { ArrowRight } from "lucide-react";
+
 import {
     BookOpen,
     Users,
@@ -34,23 +36,49 @@ const NavBar = () => (
 );
 
 const Hero = () => (
-    <div className="bg-indigo-900 text-white py-20">
-        <div className="container mx-auto px-4">
-            <div className="max-w-3xl">
-                <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                    Build and Achieve Your Dreams
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+            <div className="lg:w-1/2 space-y-6">
+                <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
+                    Bangun dan Wujudkan Cita Bersama EDUFREE
                 </h1>
-                <p className="text-lg mb-8 text-indigo-100">
-                    Join our platform to access free quality education and
-                    transform your future in the world of technology
+                <p className="text-white/80 text-lg">
+                    EDUFREE adalah sebuah layanan kursus dan pelatihan gratis
+                    secara online yang bertujuan untuk membantu kamu meraih cita
+                    di bidang teknologi
                 </p>
                 <div className="flex gap-4">
-                    <button className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-semibold hover:bg-yellow-400">
-                        Start Learning
-                    </button>
-                    <button className="border border-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-indigo-900">
-                        Learn More
-                    </button>
+                    <a
+                        href="/courses"
+                        className="px-6 py-3 bg-[#fdd981] text-[#1d1f53] rounded font-medium hover:bg-[#fdd981]/90"
+                    >
+                        Lihat Kursus
+                    </a>
+                    <a
+                        href="/path"
+                        className="flex items-center gap-2 text-white hover:text-white/80"
+                    >
+                        Lihat Alur Belajar <ArrowRight className="w-5 h-5" />
+                    </a>
+                </div>
+            </div>
+            <div className="lg:w-1/2">
+                <div className="relative">
+                    <div className="bg-white/10 rounded-lg p-6">
+                        <div className="flex gap-2 mb-4">
+                            <div className="w-3 h-3 rounded-full bg-[#ff605c]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#ffbd44]"></div>
+                            <div className="w-3 h-3 rounded-full bg-[#00ca4e]"></div>
+                        </div>
+                        <div className="space-y-3">
+                            <div className="h-2 bg-white/20 rounded w-3/4"></div>
+                            <div className="h-2 bg-white/20 rounded w-1/2"></div>
+                            <div className="h-2 bg-white/20 rounded w-2/3"></div>
+                        </div>
+                    </div>
+                    <div className="absolute -bottom-4 -right-4 w-16 h-16 bg-[#fdd981] rounded-lg flex items-center justify-center text-2xl">
+                        {}
+                    </div>
                 </div>
             </div>
         </div>
@@ -143,7 +171,7 @@ const CallToAction = () => (
                 </div>
                 <div className="md:w-1/2">
                     <img
-                        src="/images/students-learning.jpg"
+                        src="/api/placeholder/600/400"
                         alt="Students learning"
                         className="rounded-lg shadow-lg"
                     />
