@@ -21,7 +21,7 @@ export default function Register() {
         <>
             <Head title="Register" />
 
-            <div className="min-h-screen flex flex-col p-4">
+            <div className="min-h-screen flex flex-col p-4 bg-[#fefcf3]">
                 <Link
                     href="/"
                     className="flex items-center gap-2 text-xl font-bold w-fit"
@@ -120,6 +120,15 @@ export default function Register() {
                                         className="text-[#fcd881] underline"
                                     >
                                         Login Here!
+                                    </Link>
+                                </p>
+                                <p className="text-center text-white text-sm md:text-base">
+                                    Want To Register As A Teacher ?{" "}
+                                    <Link
+                                        href="/register/teacher"
+                                        className="text-[#fcd881] underline"
+                                    >
+                                        Join Us Here!
                                     </Link>
                                 </p>
                             </form>

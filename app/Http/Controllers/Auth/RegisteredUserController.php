@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\WhitelistedEmail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,6 +24,11 @@ class RegisteredUserController extends Controller
         return Inertia::render('Auth/Register');
     }
 
+    public function createTeacher(): Response
+    {
+        return Inertia::render('Auth/TeacherRegister');
+    }
+
     /**
      * Handle an incoming registration request.
      *
@@ -32,7 +38,7 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -40,6 +46,46 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ]);
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('dashboard', absolute: false));
+    }
+
+    public function storeTeacher(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|lowercase|email|max:255|:' . User::class,
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'subject' => 'required|string|max:255',
+            'experience' => 'required|string|max:255',
+        ]);
+
+        $existingUser = User::where('email', $request->input('email'))->first();
+
+        if ($existingUser) {
+            // If the email already exists, send a message with instructions to contact support
+            return back()->withErrors(['email' => 'This email is already registered. Please contact support for further assistance.']);
+        }
+
+        $email = $request->input('email');
+        $whitelistedEmail = WhitelistedEmail::where('email', $email)->first();
+
+        if (!$whitelistedEmail) {
+            return back()->withErrors(['email' => 'This email is not authorized to register as a teacher.']);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'teacher',
+            'subject' => 'required|string|max:255',
+            'experience' => 'required|string|max:255',
         ]);
 
         event(new Registered($user));

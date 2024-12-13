@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::create('whitelisted_emails', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string("role");
             $table->timestamps();
         });
     }
