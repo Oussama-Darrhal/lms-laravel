@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Navbar = ({ auth }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,29 +12,67 @@ const Navbar = ({ auth }) => {
         { href: "/blog", label: "Blog" },
     ];
 
+    // Variants for animations
+    const logoVariants = {
+        hidden: { opacity: 0, x: -50 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+    };
+
+    const navLinksVariants = {
+        hidden: { opacity: 0, y: -20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 1, delayChildren: 0.3, staggerChildren: 0.2 } },
+    };
+
+    const navLinkVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.5 } },
+    };
+
+    const menuButtonVariants = {
+        hidden: { opacity: 0, rotate: 90 },
+        visible: { opacity: 1, rotate: 0, transition: { duration: 0.5 } },
+    };
+
+    const mobileMenuVariants = {
+        hidden: { opacity: 0, y: -50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+    };
+
     return (
         <div className="w-full bg-[#1c1f52] text-white">
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="px-4 sm:px-6 lg:px-8">
                 <header className="flex items-center justify-between py-6">
                     {/* Logo */}
-                    <div className="flex-shrink-0">
-                        <span className="text-2xl font-bold">EDUFREE</span>
-                    </div>
+                    <motion.div
+                        variants={logoVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        className="flex-shrink-0"
+                    >
+                        <span className="text-2xl font-bold">[Instructly]</span>
+                    </motion.div>
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center space-x-8">
-                        <ul className="flex space-x-8">
+                        <motion.ul
+                            variants={navLinksVariants}
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true }}
+                            className="flex space-x-8"
+                        >
                             {navLinks.map((link) => (
-                                <li key={link.label}>
+                                <motion.li key={link.label} variants={navLinkVariants}>
                                     <a
                                         href={link.href}
                                         className="text-white/90 hover:text-white transition-colors duration-200"
                                     >
                                         {link.label}
                                     </a>
-                                </li>
+                                </motion.li>
                             ))}
-                        </ul>
+                        </motion.ul>
 
                         <div className="flex items-center space-x-4">
                             {auth?.user ? (
@@ -55,8 +94,12 @@ const Navbar = ({ auth }) => {
                     </nav>
 
                     {/* Mobile menu button */}
-                    <button
+                    <motion.button
                         type="button"
+                        variants={menuButtonVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
                         className="md:hidden rounded-lg p-2 hover:bg-white/10 transition-colors duration-200"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
@@ -66,21 +109,27 @@ const Navbar = ({ auth }) => {
                         ) : (
                             <Menu className="h-6 w-6" aria-hidden="true" />
                         )}
-                    </button>
+                    </motion.button>
                 </header>
 
                 {/* Mobile menu */}
                 {isMenuOpen && (
-                    <div className="md:hidden py-4">
+                    <motion.div
+                        variants={mobileMenuVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="md:hidden py-4"
+                    >
                         <div className="space-y-1">
                             {navLinks.map((link) => (
-                                <a
+                                <motion.a
                                     key={link.label}
                                     href={link.href}
+                                    variants={navLinkVariants}
                                     className="block px-4 py-2 text-white/90 hover:bg-white/10 hover:text-white transition-colors duration-200"
                                 >
                                     {link.label}
-                                </a>
+                                </motion.a>
                             ))}
                             <div className="mt-4 px-4">
                                 {auth?.user ? (
@@ -100,7 +149,7 @@ const Navbar = ({ auth }) => {
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </div>

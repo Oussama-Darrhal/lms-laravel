@@ -26,7 +26,7 @@ export default function Login({ status, canResetPassword }) {
         <>
             <Head title="Login" />
 
-            <div className="min-h-screen flex flex-col p-4 bg-[#fefcf3]">
+            <div className="min-h-screen flex flex-col p-4 ">
                 <Link
                     href="/"
                     className="flex items-center gap-2 text-xl font-bold w-fit"
