@@ -21,7 +21,7 @@ export default function Register() {
         <>
             <Head title="Register" />
 
-            <div className="min-h-screen flex flex-col p-4">
+            <div className="min-h-screen flex flex-col p-4 selection:bg-[#fdd981] selection:text-black">
                 <Link
                     href="/"
                     className="flex items-center gap-2 text-xl font-bold w-fit"

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,18 @@ Route::get('/', function () {
     ]);
 });
 
+// Middleware for authentication can be added to protect routes
+Route::middleware(['guest'])->group(function () {
+    // Courses
+    Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // Show all courses
+    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // Create a new course (admin/teacher only)
+    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store'); // Save a new course
+    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show'); // Show a specific course
+    Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('courses.edit'); // Edit a specific course
+    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
+    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
+});
+
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -24,4 +37,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -19,7 +19,7 @@ const Footer = () => {
                         </p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+                    <div className="grid-cols-1 md:grid-cols-3 gap-12 hidden lg:grid">
                         {/* Social Media Links */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
