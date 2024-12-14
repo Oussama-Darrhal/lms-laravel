@@ -11,16 +11,13 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::all();
-        return Inertia::render(
-            'Course/Index',
-            [
-                'breadcrumbs' => [
-                    ['label' => 'Home', 'url' => '/'],
-                    ['label' => 'Courses', 'url' => '/courses'],
-                ],
-                ['courses' => $courses],
-            ]
-        );
+        return Inertia::render('Course/Index', [
+            'courses' => $courses,
+            'breadcrumbs' => [
+                ['label' => 'Home', 'url' => '/'],
+                ['label' => 'Courses', 'url' => '/courses'],
+            ],
+        ]);
     }
 
     public function show($id)
