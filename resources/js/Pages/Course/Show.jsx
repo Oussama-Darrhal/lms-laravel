@@ -27,7 +27,7 @@ const TabButton = ({ active, onClick, children }) => (
 );
 
 const InstructorCard = () => (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className="bg-white rounded-lg shadow-md p-6 mt-6">
         <div className="flex items-center space-x-4">
             <div className="w-20 h-20 bg-gray-200 rounded-full overflow-hidden">
                 <img
@@ -67,7 +67,7 @@ const InstructorCard = () => (
 );
 
 const PrerequisitesList = () => (
-    <div className="space-y-4">
+    <div className="space-y-4 mt-6">
         <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
             <h3 className="font-semibold text-lg mb-4">
                 Essential Requirements
@@ -107,7 +107,7 @@ const PrerequisitesList = () => (
 );
 
 const TeachingMethods = () => (
-    <div className="grid md:grid-cols-2 gap-6">
+    <div className="grid md:grid-cols-2 gap-6 mt-6">
         {[
             {
                 icon: <PlayCircle className="w-8 h-8 text-purple-500" />,
@@ -157,7 +157,7 @@ const TestimonialForm = () => {
     const [hoveredStar, setHoveredStar] = useState(0);
 
     return (
-        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 mb-8">
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 mb-8 mt-6">
             <h3 className="text-xl font-semibold mb-4">
                 Share Your Experience
             </h3>

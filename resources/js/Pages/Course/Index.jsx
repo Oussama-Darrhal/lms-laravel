@@ -93,6 +93,28 @@ const courses = [
 ];
 
 export default function Index({ breadcrumbs }) {
+    // {
+    //             id: 1,
+    //             title: "Introduction to Web Programming",
+    //             description:
+    //                 "A beginner-level course focused on the fundamentals of web development.",
+    //             image: "/images/ben-griffiths-Bj6ENZDMSDY-unsplash.jpg",
+    //             duration: "4.5 Hours",
+    //             videos: "20 Videos",
+    //             students: "1,900 Students",
+    //             rating: 4.9,
+    //             url: "/courses/1",
+    // },
+
+    const preparedCourses = courses.map((course) => ({
+        ...course,
+        title: course.titre,
+        description: course.description || "No description available",
+        category: course.categorie || "General",
+        image: course.image || "https://picsum.photos/400/300"
+
+    }));
+
     return (
         <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
             <Head title="Courses" />
