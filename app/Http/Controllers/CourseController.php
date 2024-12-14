@@ -11,7 +11,7 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::all();
-        $courses = $this->getCourseStatistics();
+        // $courses = $this->getCourseStatistics();
         return Inertia::render('Course/Index', [
             'courses' => $courses,
             'breadcrumbs' => [
@@ -19,6 +19,11 @@ class CourseController extends Controller
                 ['label' => 'Courses', 'url' => '/courses'],
             ],
         ]);
+    }
+
+    public function enrolled()
+    {
+        return Inertia::render('Course/Success');
     }
 
     public function show($id)

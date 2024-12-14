@@ -19,6 +19,7 @@ Route::get('/', function () {
 Route::middleware(['guest'])->group(function () {
     // Courses
     Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // Show all courses
+    Route::get('/courses/enrolled', [CourseController::class, 'enrolled'])->name('courses.enrolled'); // Show all courses
     Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // Create a new course (admin/teacher only)
     Route::post('/courses', [CourseController::class, 'store'])->name('courses.store'); // Save a new course
     Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show'); // Show a specific course
