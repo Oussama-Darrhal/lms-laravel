@@ -6,9 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+
+    public function videos()
+    {
+        return $this->hasMany(Video::class);
+    }
+
     public function users()
     {
-        return $this->belongsToMany(Course::class); // Assuming a many-to-many relationship
+        return $this->belongsToMany(User::class)
+            ->withPivot('enrollment_date', 'progress_percentage', 'completion_status')
+            ->withTimestamps();
     }
 
     public function getCourseStatistics()

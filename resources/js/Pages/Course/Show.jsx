@@ -406,7 +406,7 @@ export default function Show({ course, breadcrumbs }) {
                     topic, we’re here to help you continue your journey.
                 </p>
                 <button
-                    onClick={() => (window.location.href = "/enroll")}
+                    onClick={() => (window.location.href = "/courses/enrolled")}
                     className="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
                 >
                     Join the Course

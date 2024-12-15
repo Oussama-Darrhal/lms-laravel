@@ -42,4 +42,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class)
+            ->withPivot('enrollment_date', 'progress_percentage', 'completion_status')
+            ->withTimestamps();
+    }
 }
