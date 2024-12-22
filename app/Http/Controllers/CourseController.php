@@ -11,7 +11,6 @@ class CourseController extends Controller
     public function index()
     {
         $courses = Course::all();
-        // $courses = $this->getCourseStatistics();
         return Inertia::render('Course/Index', [
             'courses' => $courses,
             'breadcrumbs' => [

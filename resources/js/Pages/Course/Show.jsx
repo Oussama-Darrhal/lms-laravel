@@ -372,7 +372,7 @@ export default function Show({ course, breadcrumbs }) {
                 <div className="aspect-w-16 aspect-h-9 mb-8 bg-gray-100 rounded-lg overflow-hidden">
                     <iframe
                         className="w-full h-[75vh]"
-                        src="https://www.youtube.com/embed/XQKdWudQkFw"
+                        src={course.url}
                     ></iframe>
                 </div>
 
