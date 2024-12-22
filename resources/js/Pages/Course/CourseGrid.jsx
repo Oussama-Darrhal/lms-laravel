@@ -4,11 +4,8 @@ export default function CourseGrid({ courses }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-24 my-32">
             {courses.map((course) => (
-                <Link href={course.url}>
-                    <div
-                        key={course.id}
-                        className="bg-white rounded-lg overflow-hidden shadow-md"
-                    >
+                <Link href={course.url} key={course.id}>
+                    <div className="bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
                         <div className="w-full h-80 overflow-hidden">
                             <img
                                 src={course.image}
@@ -16,9 +13,9 @@ export default function CourseGrid({ courses }) {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <div className="p-6">
+                        <div className="p-6 flex-1 flex flex-col">
                             <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-xl font-semibold">
+                                <h3 className="text-xl font-semibold truncate">
                                     {course.title}
                                 </h3>
                                 <div className="flex items-center">
@@ -28,7 +25,7 @@ export default function CourseGrid({ courses }) {
                                     </span>
                                 </div>
                             </div>
-                            <p className="text-gray-600 mb-4">
+                            <p className="text-gray-600 mb-4 flex-1">
                                 {course.description}
                             </p>
                             <div className="flex items-center gap-4 text-sm text-gray-500">

@@ -19,6 +19,13 @@ class Course extends Model
             ->withTimestamps();
     }
 
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class)
+            ->withPivot('enrollment_date', 'progress_percentage', 'completion_status')
+            ->withTimestamps();
+    }
+
     public function getCourseStatistics()
     {
         $courses = Course::with('videos', 'students')->get();

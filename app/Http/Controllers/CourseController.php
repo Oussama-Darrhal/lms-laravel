@@ -29,6 +29,7 @@ class CourseController extends Controller
     {
         $course = Course::findOrFail($id);
         $title = $course->titre;
+        $testimonials = $course->testimonials;
         return Inertia::render('Course/Show', [
             'course' => $course,
             'breadcrumbs' => [
