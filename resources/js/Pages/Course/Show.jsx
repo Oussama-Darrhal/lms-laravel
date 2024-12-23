@@ -16,11 +16,10 @@ import {
 const TabButton = ({ active, onClick, children }) => (
     <button
         onClick={onClick}
-        className={`whitespace-nowrap px-4 py-2 ${
-            active
-                ? "text-purple-600 border-b-2 border-purple-600"
-                : "text-gray-600 hover:text-gray-800"
-        }`}
+        className={`whitespace-nowrap px-4 py-2 ${active
+            ? "text-purple-600 border-b-2 border-purple-600"
+            : "text-gray-600 hover:text-gray-800"
+            }`}
     >
         {children}
     </button>
@@ -175,11 +174,10 @@ const TestimonialForm = () => {
                                 className="focus:outline-none"
                             >
                                 <Star
-                                    className={`w-6 h-6 ${
-                                        star <= (hoveredStar || rating)
-                                            ? "text-yellow-400 fill-current"
-                                            : "text-gray-300"
-                                    }`}
+                                    className={`w-6 h-6 ${star <= (hoveredStar || rating)
+                                        ? "text-yellow-400 fill-current"
+                                        : "text-gray-300"
+                                        }`}
                                 />
                             </button>
                         ))}
@@ -194,17 +192,6 @@ const TestimonialForm = () => {
                         type="text"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
                         placeholder="John Doe"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Your Role
-                    </label>
-                    <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        placeholder="Student / Developer / Designer"
                     />
                 </div>
 
@@ -230,34 +217,35 @@ const TestimonialForm = () => {
     );
 };
 
-const TestimonialCard = ({ name, role, content, rating }) => (
+const TestimonialCard = ({ testimonial }) => (
     <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
         <div className="flex items-center space-x-4 mb-4">
             <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
                 <img
-                    src="/api/placeholder/48/48"
-                    alt={name}
+                    src="/images/pfp-1.jpg"
+                    alt={testimonial.user.name}
                     className="w-full h-full object-cover"
                 />
             </div>
             <div>
-                <h4 className="font-semibold">{name}</h4>
-                <p className="text-sm text-gray-600">{role}</p>
+                <h4 className="font-semibold">{testimonial.user.name}</h4>
+                <p className="text-sm text-gray-600">{testimonial.user.role}</p>
             </div>
         </div>
         <div className="flex mb-3">
-            {[...Array(rating)].map((_, i) => (
+            {[...Array(parseInt(testimonial.rating))].map((_, i) => (
                 <Star
                     key={i}
                     className="w-4 h-4 text-yellow-400 fill-current"
                 />
             ))}
         </div>
-        <p className="text-gray-700">{content}</p>
+        <p className="text-gray-700">{testimonial.testimonial}</p>
+        {console.log(testimonial)}
     </div>
 );
 
-export default function Show({ course, breadcrumbs }) {
+export default function Show({ course, breadcrumbs, testimonials }) {
     const [activeTab, setActiveTab] = useState("Description");
 
     const tabs = [
@@ -312,38 +300,42 @@ export default function Show({ course, breadcrumbs }) {
                     <div>
                         <TestimonialForm />
                         <div className="grid md:grid-cols-2 gap-6">
-                            {[
-                                {
-                                    name: "Sarah Johnson",
-                                    role: "Frontend Developer",
-                                    content:
-                                        "This course provided me with a solid foundation in web development. The instructor's teaching style is clear and engaging.",
-                                    rating: 5,
-                                },
-                                {
-                                    name: "Michael Chen",
-                                    role: "Student",
-                                    content:
-                                        "As a complete beginner, this course was perfect for me. The pace is just right and the projects are very practical.",
-                                    rating: 5,
-                                },
-                                {
-                                    name: "Emily Rodriguez",
-                                    role: "UX Designer",
-                                    content:
-                                        "Great course for understanding the technical aspects of web development. It helped me collaborate better with developers.",
-                                    rating: 4,
-                                },
-                                {
-                                    name: "David Kim",
-                                    role: "Entrepreneur",
-                                    content:
-                                        "The knowledge gained from this course helped me launch my own website. Highly recommended for beginners!",
-                                    rating: 5,
-                                },
-                            ].map((testimonial, index) => (
-                                <TestimonialCard key={index} {...testimonial} />
-                            ))}
+                            {
+                                // [
+                                //     {
+                                //         name: "Sarah Johnson",
+                                //         role: "Frontend Developer",
+                                //         content:
+                                //             "This course provided me with a solid foundation in web development. The instructor's teaching style is clear and engaging.",
+                                //         rating: 5,
+                                //     },
+                                //     {
+                                //         name: "Michael Chen",
+                                //         role: "Student",
+                                //         content:
+                                //             "As a complete beginner, this course was perfect for me. The pace is just right and the projects are very practical.",
+                                //         rating: 5,
+                                //     },
+                                //     {
+                                //         name: "Emily Rodriguez",
+                                //         role: "UX Designer",
+                                //         content:
+                                //             "Great course for understanding the technical aspects of web development. It helped me collaborate better with developers.",
+                                //         rating: 4,
+                                //     },
+                                //     {
+                                //         name: "David Kim",
+                                //         role: "Entrepreneur",
+                                //         content:
+                                //             "The knowledge gained from this course helped me launch my own website. Highly recommended for beginners!",
+                                //         rating: 5,
+                                //     },
+                                // ]
+                                testimonials.map((testimonial) => (
+                                    <TestimonialCard testimonial={testimonial} />
+                                ))
+                            }
+                            {console.log(testimonials)}
                         </div>
                     </div>
                 );

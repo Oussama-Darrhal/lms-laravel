@@ -49,4 +49,10 @@ class User extends Authenticatable
             ->withPivot('enrollment_date', 'progress_percentage', 'completion_status')
             ->withTimestamps();
     }
+
+    public function testimonials()
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
 }

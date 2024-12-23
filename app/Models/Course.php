@@ -19,11 +19,9 @@ class Course extends Model
             ->withTimestamps();
     }
 
-    public function courses()
+    public function testimonials()
     {
-        return $this->belongsToMany(Course::class)
-            ->withPivot('enrollment_date', 'progress_percentage', 'completion_status')
-            ->withTimestamps();
+        return $this->hasMany(Testimonial::class);
     }
 
     public function getCourseStatistics()
