@@ -12,6 +12,7 @@ import {
     MessageCircle,
     Send,
 } from "lucide-react";
+import axios from "axios";
 
 const TabButton = ({ active, onClick, children }) => (
     <button
@@ -151,16 +152,52 @@ const TeachingMethods = () => (
     </div>
 );
 
-const TestimonialForm = () => {
+const TestimonialForm = ({ courseId }) => {
     const [rating, setRating] = useState(0);
     const [hoveredStar, setHoveredStar] = useState(0);
+    const [testimonial, setTestimonial] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Basic validation
+        if (!rating || !testimonial.trim()) {
+            setErrorMessage("Please provide a rating and a testimonial.");
+            return;
+        }
+
+        setLoading(true);
+        setErrorMessage("");
+        setSuccessMessage("");
+
+        try {
+            // Send the data to the backend
+            const response = await axios.post("/testimonials", {
+                course_id: courseId,
+                rating,
+                testimonial,
+            });
+
+            if (response.status === 200) {
+                setSuccessMessage("Thank you for your testimonial!");
+                setRating(0);
+                setTestimonial("");
+            }
+        } catch (error) {
+            setErrorMessage("Failed to submit your testimonial. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 mb-8 mt-6">
-            <h3 className="text-xl font-semibold mb-4">
-                Share Your Experience
-            </h3>
-            <form className="space-y-4">
+            <h3 className="text-xl font-semibold mb-4">Share Your Experience</h3>
+            <form className="space-y-4" onSubmit={handleSubmit}>
+                {/* Rating Section */}
                 <div className="flex items-center space-x-2 mb-4">
                     <span className="text-sm text-gray-600">Your Rating:</span>
                     <div className="flex space-x-1">
@@ -184,17 +221,7 @@ const TestimonialForm = () => {
                     </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Your Name
-                    </label>
-                    <input
-                        type="text"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                        placeholder="John Doe"
-                    />
-                </div>
-
+                {/* Testimonial Section */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         Your Testimonial
@@ -202,15 +229,29 @@ const TestimonialForm = () => {
                     <textarea
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[100px]"
                         placeholder="Share your experience with this course..."
+                        value={testimonial}
+                        onChange={(e) => setTestimonial(e.target.value)}
                     />
                 </div>
 
+                {/* Error and Success Messages */}
+                {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
+                {successMessage && <p className="text-green-500 text-sm">{successMessage}</p>}
+
+                {/* Submit Button */}
                 <button
                     type="submit"
-                    className="flex items-center justify-center w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors duration-200"
+                    disabled={loading}
+                    className={`flex items-center justify-center w-full px-4 py-2 text-white rounded-md transition-colors duration-200 ${loading ? "bg-gray-400" : "bg-purple-600 hover:bg-purple-700"
+                        }`}
                 >
-                    <Send className="w-4 h-4 mr-2" />
-                    Submit Testimonial
+                    {console.log()}
+                    {loading ? "Submitting..." : (
+                        <>
+                            <Send className="w-4 h-4 mr-2" />
+                            Submit Testimonial
+                        </>
+                    )}
                 </button>
             </form>
         </div>
@@ -335,7 +376,6 @@ export default function Show({ course, breadcrumbs, testimonials }) {
                                     <TestimonialCard testimonial={testimonial} />
                                 ))
                             }
-                            {console.log(testimonials)}
                         </div>
                     </div>
                 );

@@ -8,16 +8,21 @@ class Testimonial extends Model
 {
     protected $table = "testimonials";  // This is the name of the table in the database
 
-    protected $fillable = ['name', 'email', 'message', 'course_id'];  // These are the columns that can be filled by the user
-
-    public function course()
-    {
-        return $this->belongsTo(Course::class); // This is the relationship between the testimonial and course
-    }
+    protected $fillable = [
+        'course_id',
+        'user_id',
+        'testimonial',
+        'rating',
+    ];   // These are the columns that can be filled by the user
 
     public function user()
     {
-        return $this->belongsTo(User::class); // This is the relationship between the testimonial and the user
+        return $this->belongsTo(User::class);
+    }
+
+    public function course()
+    {
+        return $this->belongsTo(Course::class);
     }
 
 }
