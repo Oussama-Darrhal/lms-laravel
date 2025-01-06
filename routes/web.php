@@ -16,17 +16,14 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['guest'])->group(function () {
-    // Courses
-    Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // Show all courses
-    Route::get('/courses/enrolled', [CourseController::class, 'enrolled'])->name('courses.enrolled'); // Enroll in a course
-    Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // Create a new course (admin/teacher only)
-    Route::post('/courses', [CourseController::class, 'store'])->name('courses.store'); // Save a new course
-    Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show'); // Show a specific course
-    Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('courses.edit'); // Edit a specific course
-    Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
-    Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
-});
+Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // Show all courses
+Route::get('/courses/enrolled', [CourseController::class, 'enrolled'])->name('courses.enrolled'); // Enroll in a course
+Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // Create a new course (admin/teacher only)
+Route::post('/courses', [CourseController::class, 'store'])->name('courses.store'); // Save a new course
+Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show'); // Show a specific course
+Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('courses.edit'); // Edit a specific course
+Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
+Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
 
 // Routes for Testimonails
 Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');

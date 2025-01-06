@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react"; // Import User icon for profile
 import { motion } from "framer-motion";
 
 const Navbar = ({ auth }) => {
@@ -77,10 +77,18 @@ const Navbar = ({ auth }) => {
                         <div className="flex items-center space-x-4">
                             {auth?.user ? (
                                 <a
-                                    href="/dashboard"
-                                    className="px-4 py-2 rounded-lg border border-white/20 hover:bg-white/10 transition-colors duration-200"
+                                    href="/profile"
+                                    className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:bg-white/10 transition-colors duration-200"
                                 >
-                                    Dashboard
+                                    {auth.user.image ? (
+                                        <img
+                                            src={auth.user.image}
+                                            alt="Profile"
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        <User className="h-6 w-6 text-white" />
+                                    )}
                                 </a>
                             ) : (
                                 <a
