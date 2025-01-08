@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Course extends Model
 {
@@ -24,8 +25,8 @@ class Course extends Model
         return $this->hasMany(Testimonial::class);
     }
 
-    public function teachingmethod() {
-        return $this->hasMany(TeachingMethod::class);
+    public function teachingmethods(): BelongsToMany {
+        return $this->BelongsToMany(TeachingMethod::class, 'course_teaching_methods');
     }
 
 

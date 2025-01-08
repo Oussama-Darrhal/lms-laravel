@@ -35,19 +35,42 @@ class CourseController extends Controller
     public function show($id)
     {
         // Find the course by ID, or fail if not found
-        $course = Course::findOrFail($id);
+        $course = Course::with('teachingMethods')->findOrFail($id);
 
         // load the testimonials for the course with their associated user data (name and role)
         $testimonials = $course->testimonials()->with('user:id,name,role')->get();
 
-        // load the Teaching Methods for the course
-        $TeachingMethods = $course->TeachingMethods()->get();
+        // // load the Teaching Methods for the course
+        // $TeachingMethods = $course->teachingmethods()->get();
+
+        $teachingMethods = [
+            [
+                'icon' => 'PlayCircle',
+                'title' => 'Video Lectures',
+                'description' => 'High-quality video content with practical examples and demonstrations',
+            ],
+            [
+                'icon' => 'MessageCircle',
+                'title' => 'Interactive Sessions',
+                'description' => 'Live Q&A sessions and discussion forums for doubts and clarifications',
+            ],
+            [
+                'icon' => 'BookOpen',
+                'title' => 'Hands-on Projects',
+                'description' => 'Real-world projects to apply your learning and build portfolio',
+            ],
+            [
+                'icon' => 'CheckCircle',
+                'title' => 'Assessments',
+                'description' => 'Regular quizzes and assignments to test your understanding',
+            ],
+        ];
 
         // Return the 'Course/Show' view with the course data, testimonials, and breadcrumb navigation
         return Inertia::render('Course/Show', [
             'course' => $course,
             'testimonials' => $testimonials,
-            'TeachingMethods' => $TeachingMethods,
+            'teachingMethods' => $teachingMethods,
             'breadcrumbs' => [
                 ['label' => 'Home', 'url' => '/'],
                 ['label' => 'Courses', 'url' => '/courses'],

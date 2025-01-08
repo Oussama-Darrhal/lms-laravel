@@ -107,62 +107,38 @@ const PrerequisitesList = () => (
     </div>
 );
 
-const TeachingMethods = ({ TeachingMethods }) => (
+const TeachingMethodsList = ({ methods }) => (
     <div className="grid md:grid-cols-2 gap-6 mt-6">
-        {
-            //     {/* [
-            //     {
-            //         icon: "PlayCircle",
-            //         title: "Video Lectures",
-            //         description:
-            //             "High-quality video content with practical examples and demonstrations",
-            //     },
-            //     {
-            //         icon: "MessageCircle",
-            //         title: "Interactive Sessions",
-            //         description:
-            //             "Live Q&A sessions and discussion forums for doubts and clarifications",
-            //     },
-            //     {
-            //         icon: "BookOpen",
-            //         title: "Hands-on Projects",
-            //         description:
-            //             "Real-world projects to apply your learning and build portfolio",
-            //     },
-            //     {
-            //         icon: "CheckCircle",
-            //         title: "Assessments",
-            //         description:
-            //             "Regular quizzes and assignments to test your understanding",
-            //     },
-            // ] */}
-            TeachingMethods.map((method, index) => {
-                const iconColors = {
-                    PlayCircle: '#a855f7',
-                    MessageCircle: '#3b82f6',
-                    BookOpen: '#22c55e',
-                    CheckCircle: '#eab308',
-                };
-                const IconComponent = Icons[method.icon];
-                const iconColor = iconColors[method.icon] || '#a855f7';
-                return (
-                    < div
-                        key={index}
-                        className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
-                    >
-                        <div className="flex items-start space-x-4">
-                            <div className="flex-shrink-0">{<IconComponent color={iconColor} className="w-8 h-8" />}</div>
-                            <div>
-                                <h3 className="font-semibold text-lg mb-2">
-                                    {method.title}
-                                </h3>
-                                <p className="text-gray-700">{method.description}</p>
-                            </div>
+        {methods && methods.map((method, index) => {
+            const iconColors = {
+                PlayCircle: '#a855f7',
+                MessageCircle: '#3b82f6',
+                BookOpen: '#22c55e',
+                CheckCircle: '#eab308',
+            };
+            const IconComponent = Icons[method.icon];
+            const iconColor = iconColors[method.icon] || '#a855f7';
+
+            return (
+                <div
+                    key={index}
+                    className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
+                >
+                    <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                            {IconComponent && <IconComponent color={iconColor} className="w-8 h-8" />}
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-lg mb-2">
+                                {method.title}
+                            </h3>
+                            <p className="text-gray-700">{method.description}</p>
                         </div>
                     </div>
-                )
-            })}
-    </div >
+                </div>
+            );
+        })}
+    </div>
 );
 
 const TestimonialForm = () => {
@@ -365,7 +341,7 @@ export default function Show({ course, breadcrumbs, testimonials, TeachingMethod
             case "Prerequisites":
                 return <PrerequisitesList />;
             case "Teaching Methods":
-                return <TeachingMethods TeachingMethods={TeachingMethods} />;
+                return <TeachingMethodsList methods={TeachingMethods} />;
             case "Testimonials":
                 return (
                     <div>
