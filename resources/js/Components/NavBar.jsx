@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { Menu, X, User } from "lucide-react"; // Import User icon for profile
 import { motion } from "framer-motion";
+import { useForm, usePage } from "@inertiajs/react";
 
-const Navbar = ({ auth }) => {
+const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false); // State for profile menu
+
+    const { auth } = usePage().props;
+
+    const { post } = useForm();
 
     const navLinks = [
         { href: "/", label: "Home" },
@@ -36,6 +42,19 @@ const Navbar = ({ auth }) => {
     const mobileMenuVariants = {
         hidden: { opacity: 0, y: -50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+    };
+
+    // Variants for the profile menu
+    const profileMenuVariants = {
+        hidden: { opacity: 0, y: -10 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+        exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
+    };
+
+    const logout = (e) => {
+        e.preventDefault();
+
+        post(route("logout"));
     };
 
     return (
@@ -76,20 +95,44 @@ const Navbar = ({ auth }) => {
 
                         <div className="flex items-center space-x-4">
                             {auth?.user ? (
-                                <a
-                                    href="/profile"
-                                    className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:bg-white/10 transition-colors duration-200"
-                                >
-                                    {auth.user.image ? (
-                                        <img
-                                            src={auth.user.image}
-                                            alt="Profile"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        <User className="h-6 w-6 text-white" />
+                                <div className="relative">
+                                    <button
+                                        onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+                                        className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:bg-white/10 transition-colors duration-200"
+                                    >
+                                        {auth.user.image ? (
+                                            <img
+                                                src={auth.user.image}
+                                                alt="Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <User className="h-6 w-6 text-white" />
+                                        )}
+                                    </button>
+
+                                    {/* Profile Menu Popup */}
+                                    {isProfileMenuOpen && (
+                                        <motion.div
+                                            variants={profileMenuVariants}
+                                            initial="hidden"
+                                            animate="visible"
+                                            exit="exit"
+                                            className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-10"
+                                        >
+                                            <ul className="py-2">
+                                                <li onClick={() => window.location.href = "/profile"} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Profile</li>
+                                                <li onClick={() => window.location.href = "/dashboard"} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">Dashboard</li>
+                                                {/* Logout Form */}
+                                                <li>
+                                                    <form id="logout-form" onSubmit={logout} style={{ display: 'inline' }}>
+                                                        <button type="submit" className="px-4 py-2 hover:bg-gray-200 cursor-pointer w-full text-left">Logout</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </motion.div>
                                     )}
-                                </a>
+                                </div>
                             ) : (
                                 <a
                                     href="/login"

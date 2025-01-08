@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Breadcrumbs from "@/Components/BreadCrumbs";
 import Navbar from "@/Components/NavBar";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import Footer from "@/Components/Footer";
 import {
     User,
@@ -152,13 +152,16 @@ const TeachingMethods = () => (
     </div>
 );
 
-const TestimonialForm = ({ courseId }) => {
+const TestimonialForm = () => {
     const [rating, setRating] = useState(0);
     const [hoveredStar, setHoveredStar] = useState(0);
     const [testimonial, setTestimonial] = useState("");
     const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+
+    const { auth } = usePage().props;
+    const { course } = usePage().props;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -169,14 +172,15 @@ const TestimonialForm = ({ courseId }) => {
             return;
         }
 
-        setLoading(true);
+        // setLoading(true);
         setErrorMessage("");
         setSuccessMessage("");
 
         try {
             // Send the data to the backend
             const response = await axios.post("/testimonials", {
-                course_id: courseId,
+                course_id: course.id,
+                user_id: auth.user.id,
                 rating,
                 testimonial,
             });
@@ -191,6 +195,18 @@ const TestimonialForm = ({ courseId }) => {
         } finally {
             setLoading(false);
         }
+
+        // try {
+        //     const res = await axios.post('/testimonials', {
+        //         course_id: course.id,
+        //         user_id: auth.user.id,
+        //         rating,
+        //         testimonial,
+        //     });
+        //     setSuccessMessage(res.data.testimonial);
+        // } catch (error) {
+        //     console.error(error);
+        // }
     };
 
     return (

@@ -12,10 +12,20 @@ class TestimonialController extends Controller
     {
         // Validate the incoming request data
         $validated = $request->validate([
-            'course_id' => 'required|exists:courses,id', // Ensure the course ID exists in the database
-            'testimonial' => 'required|string|max:500', // Testimonial must be a string and not exceed 500 characters
-            'rating' => 'required|numeric|min:1|max:5', // Rating must be a number between 1 and 5
+            'course_id' => 'required|exists:courses,id',
+            'user_id' => 'required|numeric',
+            'rating' => 'required|numeric|min:1|max:6',
+            'testimonial' => 'required|string|max:500',
         ]);
+
+        // // Return the number back as a response
+        // return response()->json([
+        //     'success' => true,
+        //     'user_id' => $validated['user_id'],
+        //     'course_id' => $validated['course_id'],
+        //     'rating' => $validated['rating'],
+        //     'testimonial' => $validated['testimonial'],
+        // ]);
 
         // Check if the user has already submitted a testimonial for the course
         $existingTestimonial = Testimonial::where('course_id', $validated['course_id'])
@@ -35,7 +45,7 @@ class TestimonialController extends Controller
         // Store the new testimonial
         Testimonial::create([
             'course_id' => $validated['course_id'],
-            'user_id' => auth()->id(),  // The authenticated user's ID
+            'user_id' => $validated['user_id'],
             'testimonial' => $validated['testimonial'],
             'rating' => $validated['rating'],
         ]);

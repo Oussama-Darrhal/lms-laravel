@@ -25,9 +25,6 @@ Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('cours
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
 Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
 
-// Routes for Testimonails
-Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -36,6 +33,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Routes for Testimonails
+    Route::post('/testimonials', [TestimonialController::class, 'store'])->name('testimonials.store');
 });
 
 require __DIR__ . '/auth.php';
