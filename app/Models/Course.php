@@ -24,6 +24,11 @@ class Course extends Model
         return $this->hasMany(Testimonial::class);
     }
 
+    public function teachingmethod() {
+        return $this->hasMany(TeachingMethod::class);
+    }
+
+
     public function getCourseStatistics()
     {
         $courses = Course::with('videos', 'students')->get();

@@ -12,6 +12,7 @@ import {
     MessageCircle,
     Send,
 } from "lucide-react";
+import * as Icons from 'lucide-react'; // Import all Lucide icons
 import axios from "axios";
 
 const TabButton = ({ active, onClick, children }) => (
@@ -80,7 +81,7 @@ const PrerequisitesList = () => (
                     "Eagerness to learn web development",
                 ].map((item, index) => (
                     <li key={index} className="flex items-start space-x-3">
-                        <CheckCircle className="w-5 h-5 text-green-500 mt-1" />
+                        <Icons.CheckCircle className="w-5 h-5 text-green-500 mt-1" />
                         <span className="text-gray-700">{item}</span>
                     </li>
                 ))}
@@ -97,7 +98,7 @@ const PrerequisitesList = () => (
                     "Familiarity with text editors",
                 ].map((item, index) => (
                     <li key={index} className="flex items-start space-x-3">
-                        <BookOpen className="w-5 h-5 text-blue-500 mt-1" />
+                        <Icons.BookOpen className="w-5 h-5 text-blue-500 mt-1" />
                         <span className="text-gray-700">{item}</span>
                     </li>
                 ))}
@@ -106,50 +107,62 @@ const PrerequisitesList = () => (
     </div>
 );
 
-const TeachingMethods = () => (
+const TeachingMethods = ({ TeachingMethods }) => (
     <div className="grid md:grid-cols-2 gap-6 mt-6">
-        {[
-            {
-                icon: <PlayCircle className="w-8 h-8 text-purple-500" />,
-                title: "Video Lectures",
-                description:
-                    "High-quality video content with practical examples and demonstrations",
-            },
-            {
-                icon: <MessageCircle className="w-8 h-8 text-blue-500" />,
-                title: "Interactive Sessions",
-                description:
-                    "Live Q&A sessions and discussion forums for doubts and clarifications",
-            },
-            {
-                icon: <BookOpen className="w-8 h-8 text-green-500" />,
-                title: "Hands-on Projects",
-                description:
-                    "Real-world projects to apply your learning and build portfolio",
-            },
-            {
-                icon: <CheckCircle className="w-8 h-8 text-yellow-500" />,
-                title: "Assessments",
-                description:
-                    "Regular quizzes and assignments to test your understanding",
-            },
-        ].map((method, index) => (
-            <div
-                key={index}
-                className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
-            >
-                <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">{method.icon}</div>
-                    <div>
-                        <h3 className="font-semibold text-lg mb-2">
-                            {method.title}
-                        </h3>
-                        <p className="text-gray-700">{method.description}</p>
+        {
+            //     {/* [
+            //     {
+            //         icon: "PlayCircle",
+            //         title: "Video Lectures",
+            //         description:
+            //             "High-quality video content with practical examples and demonstrations",
+            //     },
+            //     {
+            //         icon: "MessageCircle",
+            //         title: "Interactive Sessions",
+            //         description:
+            //             "Live Q&A sessions and discussion forums for doubts and clarifications",
+            //     },
+            //     {
+            //         icon: "BookOpen",
+            //         title: "Hands-on Projects",
+            //         description:
+            //             "Real-world projects to apply your learning and build portfolio",
+            //     },
+            //     {
+            //         icon: "CheckCircle",
+            //         title: "Assessments",
+            //         description:
+            //             "Regular quizzes and assignments to test your understanding",
+            //     },
+            // ] */}
+            TeachingMethods.map((method, index) => {
+                const iconColors = {
+                    PlayCircle: '#a855f7',
+                    MessageCircle: '#3b82f6',
+                    BookOpen: '#22c55e',
+                    CheckCircle: '#eab308',
+                };
+                const IconComponent = Icons[method.icon];
+                const iconColor = iconColors[method.icon] || '#a855f7';
+                return (
+                    < div
+                        key={index}
+                        className="bg-white rounded-lg shadow-sm p-6 border border-gray-100"
+                    >
+                        <div className="flex items-start space-x-4">
+                            <div className="flex-shrink-0">{<IconComponent color={iconColor} className="w-8 h-8" />}</div>
+                            <div>
+                                <h3 className="font-semibold text-lg mb-2">
+                                    {method.title}
+                                </h3>
+                                <p className="text-gray-700">{method.description}</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        ))}
-    </div>
+                )
+            })}
+    </div >
 );
 
 const TestimonialForm = () => {
@@ -302,8 +315,9 @@ const TestimonialCard = ({ testimonial }) => (
     </div>
 );
 
-export default function Show({ course, breadcrumbs, testimonials }) {
+export default function Show({ course, breadcrumbs, testimonials, TeachingMethods }) {
     const [activeTab, setActiveTab] = useState("Description");
+    const { auth } = usePage().props;
 
     const tabs = [
         "Description",
@@ -351,43 +365,15 @@ export default function Show({ course, breadcrumbs, testimonials }) {
             case "Prerequisites":
                 return <PrerequisitesList />;
             case "Teaching Methods":
-                return <TeachingMethods />;
+                return <TeachingMethods TeachingMethods={TeachingMethods} />;
             case "Testimonials":
                 return (
                     <div>
-                        <TestimonialForm />
-                        <div className="grid md:grid-cols-2 gap-6">
+                        {
+                            auth.user && <TestimonialForm />
+                        }
+                        <div className="grid md:grid-cols-2 gap-6 mt-6">
                             {
-                                // [
-                                //     {
-                                //         name: "Sarah Johnson",
-                                //         role: "Frontend Developer",
-                                //         content:
-                                //             "This course provided me with a solid foundation in web development. The instructor's teaching style is clear and engaging.",
-                                //         rating: 5,
-                                //     },
-                                //     {
-                                //         name: "Michael Chen",
-                                //         role: "Student",
-                                //         content:
-                                //             "As a complete beginner, this course was perfect for me. The pace is just right and the projects are very practical.",
-                                //         rating: 5,
-                                //     },
-                                //     {
-                                //         name: "Emily Rodriguez",
-                                //         role: "UX Designer",
-                                //         content:
-                                //             "Great course for understanding the technical aspects of web development. It helped me collaborate better with developers.",
-                                //         rating: 4,
-                                //     },
-                                //     {
-                                //         name: "David Kim",
-                                //         role: "Entrepreneur",
-                                //         content:
-                                //             "The knowledge gained from this course helped me launch my own website. Highly recommended for beginners!",
-                                //         rating: 5,
-                                //     },
-                                // ]
                                 testimonials.map((testimonial) => (
                                     <TestimonialCard testimonial={testimonial} />
                                 ))

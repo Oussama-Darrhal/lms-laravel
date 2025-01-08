@@ -37,13 +37,17 @@ class CourseController extends Controller
         // Find the course by ID, or fail if not found
         $course = Course::findOrFail($id);
 
-        // Eager load the testimonials for the course with their associated user data (name and role)
+        // load the testimonials for the course with their associated user data (name and role)
         $testimonials = $course->testimonials()->with('user:id,name,role')->get();
+
+        // load the Teaching Methods for the course
+        $TeachingMethods = $course->TeachingMethods()->get();
 
         // Return the 'Course/Show' view with the course data, testimonials, and breadcrumb navigation
         return Inertia::render('Course/Show', [
             'course' => $course,
             'testimonials' => $testimonials,
+            'TeachingMethods' => $TeachingMethods,
             'breadcrumbs' => [
                 ['label' => 'Home', 'url' => '/'],
                 ['label' => 'Courses', 'url' => '/courses'],
