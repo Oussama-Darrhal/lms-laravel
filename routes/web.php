@@ -26,13 +26,6 @@ Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('cours
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
 Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
-    Route::delete('/cart/items/{cartItem}', [CartController::class, 'removeItem'])->name('cart.remove');
-    Route::patch('/cart/items/{cartItem}', [CartController::class, 'updateQuantity'])->name('cart.update');
-});
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
