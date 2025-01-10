@@ -1,106 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Menu, X, User, ShoppingCart, Trash2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Menu, X, User } from "lucide-react";
+import { motion } from "framer-motion";
 import { useForm, usePage } from "@inertiajs/react";
-
-const CartItem = ({ item, onRemove }) => (
-    <div className="border-b py-2">
-        <div className="flex justify-between items-center">
-            <h3 className="font-semibold">{item.name}</h3>
-            <button
-                onClick={() => onRemove(item.id)}
-                className="text-gray-500 hover:text-red-500"
-            >
-                <Trash2 className="w-4 h-4" />
-            </button>
-        </div>
-        <p className="text-gray-600">Price: ${item.price.toFixed(2)}</p>
-    </div>
-);
-
-const CartSidebar = ({ isOpen, onClose }) => {
-    const sidebarRef = useRef(null);
-    const [items] = useState([
-        { id: 1, name: "JavaScript Basics Course", price: 10.00 },
-        { id: 2, name: "React Masterclass", price: 15.00 }
-    ]);
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            // Check if click is outside both the sidebar and the cart button
-            if (
-                sidebarRef.current &&
-                !sidebarRef.current.contains(event.target) &&
-                !event.target.closest('[data-cart-button="true"]')
-            ) {
-                onClose();
-            }
-        };
-
-        if (isOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [isOpen, onClose]);
-
-    const removeItem = (id) => {
-        // Implement remove functionality
-        console.log('Removing item:', id);
-    };
-
-    const total = items.reduce((sum, item) => sum + item.price, 0);
-
-    return (
-        <AnimatePresence>
-            {isOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end z-50">
-                    <motion.div
-                        ref={sidebarRef}
-                        initial={{ x: "100%" }}
-                        animate={{ x: 0 }}
-                        exit={{ x: "100%" }}
-                        transition={{ type: "tween", duration: 0.3 }}
-                        className="bg-white w-80 h-full"
-                    >
-                        <div className="p-4 h-full flex flex-col">
-                            <div className="flex justify-between items-center">
-                                <h2 className="text-xl font-bold">Shopping Cart</h2>
-                                <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-                                    <X className="w-5 h-5" />
-                                </button>
-                            </div>
-
-                            <div className="flex-1 overflow-y-auto mt-4">
-                                {items.map(item => (
-                                    <CartItem key={item.id} item={item} onRemove={removeItem} />
-                                ))}
-                            </div>
-
-                            <div className="mt-4">
-                                <div className="flex justify-between mb-4">
-                                    <span className="font-bold">Total:</span>
-                                    <span>${total.toFixed(2)}</span>
-                                </div>
-                                <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                                    Checkout
-                                </button>
-                            </div>
-                        </div>
-                    </motion.div>
-                </div>
-            )}
-        </AnimatePresence>
-    );
-};
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [isMobileProfileMenuOpen, setIsMobileProfileMenuOpen] = useState(false);
-    const [isCartOpen, setIsCartOpen] = useState(false);
 
     const { auth } = usePage().props;
     const { post } = useForm();
@@ -160,14 +66,6 @@ const Navbar = () => {
                             </motion.ul>
 
                             <div className="flex items-center space-x-4">
-                                <button
-                                    data-cart-button="true"
-                                    onClick={() => setIsCartOpen(!isCartOpen)}
-                                    className="flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:bg-white/10 transition-colors duration-200"
-                                >
-                                    <ShoppingCart className="h-6 w-6 text-white" />
-                                </button>
-
                                 {auth?.user ? (
                                     <div className="relative">
                                         <button
@@ -288,8 +186,6 @@ const Navbar = () => {
                     )}
                 </div>
             </div>
-
-            <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </>
     );
 };
