@@ -13,6 +13,11 @@ class Course extends Model
         return $this->hasMany(Video::class);
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class)
@@ -29,6 +34,9 @@ class Course extends Model
         return $this->BelongsToMany(TeachingMethod::class, 'course_teaching_methods');
     }
 
+    public function prerequisites() {
+        return $this->hasMany(Prerequisites::class);
+    }
 
     public function getCourseStatistics()
     {
@@ -42,6 +50,10 @@ class Course extends Model
         });
 
         return $coursesWithStats;
+    }
+
+    public function description() {
+        return $this->hasOne(Description::class);
     }
 
     protected $fillable = ['titre', 'description', 'image'];

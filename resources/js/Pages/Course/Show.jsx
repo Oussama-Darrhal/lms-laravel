@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Breadcrumbs from "@/Components/BreadCrumbs";
 import Navbar from "@/Components/NavBar";
 import { Head, usePage } from "@inertiajs/react";
@@ -27,59 +27,47 @@ const TabButton = ({ active, onClick, children }) => (
     </button>
 );
 
-const InstructorCard = () => (
-    <div className="bg-white rounded-lg shadow-md p-6 mt-6">
+const InstructorCard = ({ teacherDetails }) => (
+    <div className="bg-white rounded-lg shadow-md p-6 mt-6 capitalize">
         <div className="flex items-center space-x-4">
             <div className="w-20 h-20 bg-gray-200 rounded-full overflow-hidden">
                 <img
-                    src="/api/placeholder/80/80"
+                    src={teacherDetails.profile_picture}
                     alt="Instructor"
                     className="w-full h-full object-cover"
                 />
             </div>
             <div>
-                <h3 className="text-xl font-semibold">John Doe</h3>
-                <p className="text-gray-600">Senior Web Developer</p>
-                <div className="flex items-center mt-2">
-                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                    <span className="ml-1 text-gray-600">
-                        4.9 (2.5k+ reviews)
-                    </span>
-                </div>
+                <h3 className="text-xl font-semibold">{teacherDetails.name}</h3>
+                <p className="text-gray-600 capitalize">{"Teacher of " + teacherDetails.subject}</p>
             </div>
         </div>
         <div className="mt-4">
             <p className="text-gray-700">
-                10+ years of experience in web development and teaching.
-                Specialized in modern web technologies and frameworks.
+                {teacherDetails.experience + " years of experience in " + teacherDetails.subject}
             </p>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-4">
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="font-semibold">50+</div>
+                <div className="font-semibold">{teacherDetails.user_courses}</div>
                 <div className="text-sm text-gray-600">Courses</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <div className="font-semibold">10,000+</div>
+                <div className="font-semibold">{teacherDetails.userCount}</div>
                 <div className="text-sm text-gray-600">Students</div>
             </div>
         </div>
     </div>
 );
 
-const PrerequisitesList = () => (
+const PrerequisitesList = ({ prerequisites }) => (
     <div className="space-y-4 mt-6">
         <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
             <h3 className="font-semibold text-lg mb-4">
                 Essential Requirements
             </h3>
             <ul className="space-y-3">
-                {[
-                    "Basic understanding of computers and internet",
-                    "A computer with internet connection",
-                    "Basic typing skills",
-                    "Eagerness to learn web development",
-                ].map((item, index) => (
+                {prerequisites.Essential_Requirements.map((item, index) => (
                     <li key={index} className="flex items-start space-x-3">
                         <Icons.CheckCircle className="w-5 h-5 text-green-500 mt-1" />
                         <span className="text-gray-700">{item}</span>
@@ -92,11 +80,7 @@ const PrerequisitesList = () => (
                 Recommended Background
             </h3>
             <ul className="space-y-3">
-                {[
-                    "Basic knowledge of any programming language",
-                    "Understanding of file systems",
-                    "Familiarity with text editors",
-                ].map((item, index) => (
+                {prerequisites.Recommended_Background.map((item, index) => (
                     <li key={index} className="flex items-start space-x-3">
                         <Icons.BookOpen className="w-5 h-5 text-blue-500 mt-1" />
                         <span className="text-gray-700">{item}</span>
@@ -161,7 +145,7 @@ const TestimonialForm = () => {
             return;
         }
 
-        // setLoading(true);
+        setLoading(true);
         setErrorMessage("");
         setSuccessMessage("");
 
@@ -184,18 +168,6 @@ const TestimonialForm = () => {
         } finally {
             setLoading(false);
         }
-
-        // try {
-        //     const res = await axios.post('/testimonials', {
-        //         course_id: course.id,
-        //         user_id: auth.user.id,
-        //         rating,
-        //         testimonial,
-        //     });
-        //     setSuccessMessage(res.data.testimonial);
-        // } catch (error) {
-        //     console.error(error);
-        // }
     };
 
     return (
@@ -250,7 +222,6 @@ const TestimonialForm = () => {
                     className={`flex items-center justify-center w-full px-4 py-2 text-white rounded-md transition-colors duration-200 ${loading ? "bg-gray-400" : "bg-purple-600 hover:bg-purple-700"
                         }`}
                 >
-                    {console.log()}
                     {loading ? "Submitting..." : (
                         <>
                             <Send className="w-4 h-4 mr-2" />
@@ -261,37 +232,195 @@ const TestimonialForm = () => {
             </form>
         </div>
     );
+}
+
+const TestimonialCard = ({ testimonial }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [newTestimonial, setNewTestimonial] = useState(testimonial.testimonial);
+    const [newRating, setNewRating] = useState(testimonial.rating);
+
+    const { auth } = usePage().props; // Get the logged-in user data
+    const { course } = usePage().props; // Get the course data
+    const dropdownRef = useRef(null); // Create a ref for the dropdown menu
+
+    // Check if the logged-in user is the one who made the testimonial
+    const isUserOwner = auth.user.id === testimonial.user.id;
+
+    const handleToggleMenu = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleEdit = () => {
+        setIsEditing(true);
+        setIsOpen(false);
+    };
+
+    const handleDelete = async () => {
+        // Logic for deleting the testimonial
+        console.log('Delete testimonial:', testimonial.id);
+        try {
+            const response = await axios.delete(`/testimonials/${testimonial.id}`);
+            if (response.status === 200) {
+                console.log('Testimonial deleted');
+                window.location.reload(); // Refresh the page after deletion
+            }
+        } catch (error) {
+            console.error('Error deleting testimonial:', error);
+        }
+        setIsOpen(false);
+    };
+
+    const handleRatingChange = (event) => {
+        setNewRating(event.target.value);
+    };
+
+    const handleTestimonialChange = (event) => {
+        setNewTestimonial(event.target.value);
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.put(`/testimonials/${testimonial.id}`, {
+                course_id: course.id,
+                user_id: testimonial.user.id,
+                testimonial: newTestimonial,
+                rating: newRating,
+            });
+
+            if (response.status === 200) {
+                console.log('Testimonial updated successfully!');
+                setNewTestimonial(testimonial.testimonial); // Reset to original
+                setNewRating(testimonial.rating); // Reset to original
+                window.location.reload(); // Refresh the page to see changes
+            }
+        } catch (error) {
+            console.error('Error updating testimonial:', error);
+        } finally {
+            setIsEditing(false);
+        }
+    };
+
+    // Close the dropdown menu when clicking outside of it
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        };
+
+        // Attach the event listener
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [dropdownRef]);
+
+    return (
+        <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100 relative">
+            {isEditing ? (
+                <form onSubmit={handleSubmit}>
+                    <textarea
+                        value={newTestimonial}
+                        onChange={handleTestimonialChange}
+                        className="w-full p-2 border border-gray-300 rounded mb-2"
+                        rows="3"
+                    />
+                    <div className="flex mb-3">
+                        {[...Array(5)].map((_, i) => (
+                            <label key={i} className="cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="rating"
+                                    value={i + 1}
+                                    checked={newRating == i + 1}
+                                    onChange={handleRatingChange}
+                                    className="hidden"
+                                />
+                                <Star
+                                    className={`w-4 h-4 ${i < newRating ? 'text-yellow-400' : 'text-gray-300'} fill-current`}
+                                />
+                            </label>
+                        ))}
+                    </div>
+                    <button type="submit" className="bg-purple-500 text-white px-4 py-2 rounded">
+                        Submit
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setIsEditing(false)}
+                        className="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                    >
+                        Cancel
+                    </button>
+                </form>
+            ) : (
+                <>
+                    <div className="flex items-center space-x-4 mb-4">
+                        <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                            <img
+                                src={testimonial.user.profile_picture}
+                                alt={testimonial.user.name}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                        <div className="flex-grow">
+                            <h4 className="font-semibold">{testimonial.user.name}</h4>
+                            <p className="text-sm text-gray-600">{testimonial.user.role}</p>
+                        </div>
+                        {isUserOwner && (
+                            <div className="relative" ref={dropdownRef}>
+                                <button onClick={handleToggleMenu} className="focus:outline-none">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-5 w-5 text-gray-600"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <circle cx="12" cy="12" r="2" />
+                                        <circle cx="12" cy="6" r="2" />
+                                        <circle cx="12" cy="18" r="2" />
+                                    </svg>
+                                </button>
+                                {isOpen && (
+                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                        <button
+                                            onClick={handleEdit}
+                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            onClick={handleDelete}
+                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex mb-3">
+                        {[...Array(parseInt(testimonial.rating))].map((_, i) => (
+                            <Star
+                                key={i}
+                                className="w-4 h-4 text-yellow-400 fill-current"
+                            />
+                        ))}
+                    </div>
+                    <p className="text-gray-700">{testimonial.testimonial}</p>
+                </>
+            )}
+        </div>
+    );
 };
 
-const TestimonialCard = ({ testimonial }) => (
-    <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
-        <div className="flex items-center space-x-4 mb-4">
-            <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
-                <img
-                    src="/images/pfp-1.jpg"
-                    alt={testimonial.user.name}
-                    className="w-full h-full object-cover"
-                />
-            </div>
-            <div>
-                <h4 className="font-semibold">{testimonial.user.name}</h4>
-                <p className="text-sm text-gray-600">{testimonial.user.role}</p>
-            </div>
-        </div>
-        <div className="flex mb-3">
-            {[...Array(parseInt(testimonial.rating))].map((_, i) => (
-                <Star
-                    key={i}
-                    className="w-4 h-4 text-yellow-400 fill-current"
-                />
-            ))}
-        </div>
-        <p className="text-gray-700">{testimonial.testimonial}</p>
-        {console.log(testimonial)}
-    </div>
-);
-
-export default function Show({ course, breadcrumbs, testimonials, TeachingMethods }) {
+export default function Show({ course, breadcrumbs, testimonials, teachingMethods, user, prerequisites, description }) {
     const [activeTab, setActiveTab] = useState("Description");
     const { auth } = usePage().props;
 
@@ -307,41 +436,16 @@ export default function Show({ course, breadcrumbs, testimonials, TeachingMethod
         switch (activeTab) {
             case "Description":
                 return (
-                    <div className="mt-6 space-y-4">
-                        <p className="text-gray-700 text-base sm:text-lg">
-                            Web programming is a term that is closely related to
-                            websites and the internet. Why is that? Because web
-                            programming is one of the processes of creating
-                            websites for internet purposes which is usually
-                            referred to as WWW or world wide web.
-                        </p>
-                        <p className="text-gray-700 text-base sm:text-lg">
-                            In this course you will be taught how to create an
-                            industry-standard website. Here you will be taught
-                            about HTML, CSS and Javascript which are the basic
-                            foundations in creating a website.
-                        </p>
-                        <div className="mt-6">
-                            <h3 className="font-semibold mb-2 text-lg sm:text-xl">
-                                The benefits of learning website programming
-                                are:
-                            </h3>
-                            <ul className="list-disc pl-5 space-y-2 text-base sm:text-lg">
-                                <li>
-                                    Able to run business applications and
-                                    software
-                                </li>
-                                <li>Can build your own website</li>
-                            </ul>
-                        </div>
+                    <div className="mt-10 space-y-4">
+                        {description && <div className="mb-4" dangerouslySetInnerHTML={{ __html: description.content }} />}
                     </div>
                 );
             case "Instructor":
-                return <InstructorCard />;
+                return <InstructorCard teacherDetails={user} />;
             case "Prerequisites":
-                return <PrerequisitesList />;
+                return <PrerequisitesList prerequisites={prerequisites} />;
             case "Teaching Methods":
-                return <TeachingMethodsList methods={TeachingMethods} />;
+                return <TeachingMethodsList methods={teachingMethods} />;
             case "Testimonials":
                 return (
                     <div>
@@ -416,7 +520,7 @@ export default function Show({ course, breadcrumbs, testimonials, TeachingMethod
                     topic, we’re here to help you continue your journey.
                 </p>
                 <button
-                    onClick={() => (window.location.href = "/courses/enrolled")}
+                    onClick={() => (window.location.href = "/courses/"+course.id+"/enrolled")}
                     className="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
                 >
                     Join the Course

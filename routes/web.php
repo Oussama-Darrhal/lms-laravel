@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TestimonialController;
@@ -17,13 +18,20 @@ Route::get('/', function () {
 });
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // Show all courses
-Route::get('/courses/enrolled', [CourseController::class, 'enrolled'])->name('courses.enrolled'); // Enroll in a course
+Route::get('/courses/{id}/enrolled', [CourseController::class, 'enrolled'])->name('courses.enrolled'); // Enroll in a course
 Route::get('/courses/create', [CourseController::class, 'create'])->name('courses.create'); // Create a new course (admin/teacher only)
 Route::post('/courses', [CourseController::class, 'store'])->name('courses.store'); // Save a new course
 Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.show'); // Show a specific course
 Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('courses.edit'); // Edit a specific course
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
 Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'addItem'])->name('cart.add');
+    Route::delete('/cart/items/{cartItem}', [CartController::class, 'removeItem'])->name('cart.remove');
+    Route::patch('/cart/items/{cartItem}', [CartController::class, 'updateQuantity'])->name('cart.update');
+});
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

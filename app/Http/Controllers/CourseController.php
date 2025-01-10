@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -25,58 +26,63 @@ class CourseController extends Controller
     }
 
     // Display a success page for enrolling in a course
-    public function enrolled()
+    public function enrolled($id)
     {
-        // Return the 'Course/Success' view to indicate successful enrollment
-        return Inertia::render('Course/Success');
+        $course = Course::findOrFail($id);
+
+        return Inertia::render(
+            'Course/Success',
+            [
+                "course" => $course,
+            ]
+        );
     }
 
     // Display the details of a specific course by ID
     public function show($id)
     {
-        // Find the course by ID, or fail if not found
-        $course = Course::with('teachingMethods')->findOrFail($id);
+        // Find the course by ID
+        $course = Course::findOrFail($id);
+
+        // Find the Teacher by ID
+        $user = User::findOrFail($course->teacher_id);
+
+        // Find The Number Of Courses Made By The Teacher
+        $user_courses = Course::where("teacher_id", $user->id)->count();
+
+        // Find The Number Of Users Enrolled In The Course
+        $userCount = $course->enrollments()->count();
+
+        // Add user_courses and userCount as an element of the $user variable
+        $user->setAttribute('user_courses', $user_courses);
+        $user->setAttribute('userCount', $userCount);
 
         // load the testimonials for the course with their associated user data (name and role)
-        $testimonials = $course->testimonials()->with('user:id,name,role')->get();
+        $testimonials = $course->testimonials()->with('user:id,name,role,profile_picture')->get();
 
-        // // load the Teaching Methods for the course
-        // $TeachingMethods = $course->teachingmethods()->get();
+        // load the prerequisites of the course
+        $prerequisites = $course->prerequisites()->get()->first();
 
-        $teachingMethods = [
-            [
-                'icon' => 'PlayCircle',
-                'title' => 'Video Lectures',
-                'description' => 'High-quality video content with practical examples and demonstrations',
-            ],
-            [
-                'icon' => 'MessageCircle',
-                'title' => 'Interactive Sessions',
-                'description' => 'Live Q&A sessions and discussion forums for doubts and clarifications',
-            ],
-            [
-                'icon' => 'BookOpen',
-                'title' => 'Hands-on Projects',
-                'description' => 'Real-world projects to apply your learning and build portfolio',
-            ],
-            [
-                'icon' => 'CheckCircle',
-                'title' => 'Assessments',
-                'description' => 'Regular quizzes and assignments to test your understanding',
-            ],
-        ];
+        // load the description of the course
+        $description = $course->description()->get()->first();
 
         // Return the 'Course/Show' view with the course data, testimonials, and breadcrumb navigation
-        return Inertia::render('Course/Show', [
-            'course' => $course,
-            'testimonials' => $testimonials,
-            'teachingMethods' => $teachingMethods,
-            'breadcrumbs' => [
-                ['label' => 'Home', 'url' => '/'],
-                ['label' => 'Courses', 'url' => '/courses'],
-                ['label' => $course->titre, 'url' => $course->titre],
-            ],
-        ]);
+        return Inertia::render(
+            'Course/Show',
+            [
+                'course' => $course,
+                'user' => $user,
+                'testimonials' => $testimonials,
+                'prerequisites' => $prerequisites,
+                'description' => $description,
+                'teachingMethods' => $course->teachingmethods,
+                'breadcrumbs' => [
+                    ['label' => 'Home', 'url' => '/'],
+                    ['label' => 'Courses', 'url' => '/courses'],
+                    ['label' => $course->titre, 'url' => $course->titre],
+                ],
+            ]
+        );
     }
 
     // Store a new course in the database
@@ -94,4 +100,5 @@ class CourseController extends Controller
         // Redirect the user to the course index page with a success message
         return redirect()->route('courses.index')->with('success', 'Course created successfully!');
     }
+
 }

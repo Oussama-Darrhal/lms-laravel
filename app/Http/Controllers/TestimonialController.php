@@ -39,6 +39,10 @@ class TestimonialController extends Controller
                 'rating' => $validated['rating'],
             ]);
 
+            // Calculate the new average rating for the course and update it
+            $averageRating = Testimonial::where('course_id', $validated['course_id'])->avg('rating');
+            Course::where('id', $validated['course_id'])->update(['rating' => round($averageRating, 1)]);
+
             return redirect()->back()->with('success', 'Your testimonial has been updated!');
         }
 
