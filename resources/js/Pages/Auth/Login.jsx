@@ -1,10 +1,14 @@
-import Checkbox from "@/Components/Checkbox";
-import InputError from "@/Components/InputError";
-import { Head, Link, useForm } from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { Head, useForm } from "@inertiajs/react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useState, useEffect } from "react";
 
-export default function Login({ status, canResetPassword }) {
+const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1.7, ease: "easeInOut" } },
+};
+
+const Login = ({ status, canResetPassword }) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: "",
         password: "",
@@ -12,17 +16,24 @@ export default function Login({ status, canResetPassword }) {
     });
 
     const [showPassword, setShowPassword] = useState(false);
-    const [activeTab, setActiveTab] = useState("login"); // State to manage active tab
+    const [activeTab, setActiveTab] = useState("login");
 
     useEffect(() => {
-        // Determine the active tab based on the current URL or route
-        const currentPath = window.location.pathname; // Get current path
+        const currentPath = window.location.pathname;
         if (currentPath.includes("register")) {
             setActiveTab("register");
         } else {
             setActiveTab("login");
         }
-    }, []); // Runs once when the component mounts
+
+        // Hide overflow when the component mounts
+        document.body.style.overflow = "hidden";
+
+        // Cleanup function to restore overflow when component unmounts
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, []);
 
     const submit = (e) => {
         e.preventDefault();
@@ -37,9 +48,15 @@ export default function Login({ status, canResetPassword }) {
 
             <div className="min-h-screen flex">
                 {/* Left Half - Image Section */}
-                <div className="hidden md:flex md:w-1/2 relative m-10 bg-teal-600 rounded-3xl overflow-hidden">
+                <motion.div
+                    className="hidden md:flex md:w-1/2 relative m-10 bg-teal-600 rounded-3xl overflow-hidden"
+                    variants={sectionVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                >
                     <img
-                        src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80"
+                        src="images/classroom.jpg"
                         alt="Classroom"
                         className="object-cover w-full h-full"
                     />
@@ -48,10 +65,16 @@ export default function Login({ status, canResetPassword }) {
                         <h2 className="text-4xl font-bold mb-2">Lorem Ipsum is simply</h2>
                         <p className="text-xl">Lorem Ipsum is simply</p>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Right Half - Form Section */}
-                <div className="w-full md:w-1/2 p-8 flex flex-col justify-center items-center">
+                <motion.div
+                    className="w-full md:w-1/2 p-8 flex flex-col justify-center items-center"
+                    variants={sectionVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                >
                     <div className="w-full max-w-md">
                         <div className="text-center mb-8">
                             <h1 className="text-2xl font-semibold mb-2">Welcome to lorem..!</h1>
@@ -60,49 +83,46 @@ export default function Login({ status, canResetPassword }) {
                             </p>
                         </div>
 
-                        {/* Tab Section */}
                         <div className="flex justify-center p-1 bg-[#E8F2EF] rounded-full gap-1 mb-8 mx-auto max-w-xs">
-                            <button
+                            <motion.button
                                 onClick={() => setActiveTab('login')}
-                                className={`flex-1 px-6 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'login'
-                                    ? 'bg-[#63C5B5] text-white'
-                                    : 'text-[#63C5B5]'
-                                    }`}
+                                className={`flex-1 px-6 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'login' ? 'bg-[#63C5B5] text-white' : 'text-[#63C5B5]'}`}
+                                whileHover={{ scale: 1.05 }}
                             >
                                 Login
-                            </button>
-                            <button
+                            </motion.button>
+                            <motion.button
                                 onClick={() => setActiveTab('register')}
-                                className={`flex-1 px-6 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'register'
-                                    ? 'bg-[#63C5B5] text-white'
-                                    : 'text-[#63C5B5]'
-                                    }`}
+                                className={`flex-1 px-6 py-2 rounded-full text-sm font-medium transition-colors ${activeTab === 'register' ? 'bg-[#63C5B5] text-white' : 'text-[#63C5B5]'}`}
+                                whileHover={{ scale: 1.05 }}
                             >
                                 Register
-                            </button>
+                            </motion.button>
                         </div>
 
                         <form onSubmit={submit} className="space-y-6">
                             <div>
                                 <label className="block text-gray-600 text-sm mb-2">User name</label>
-                                <input
+                                <motion.input
                                     type="text"
-                                    placeholder="Enter your User name"
+                                    placeholder="Enter your Email"
                                     className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
-                                    value={data.username}
-                                    onChange={(e) => setData('username', e.target.value)}
+                                    value={data.email}
+                                    onChange={(e) => setData('email', e.target.value)}
+                                    whileFocus={{ scale: 1.02 }}
                                 />
                             </div>
 
                             <div>
                                 <label className="block text-gray-600 text-sm mb-2">Password</label>
                                 <div className="relative">
-                                    <input
+                                    <motion.input
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder="Enter your Password"
                                         className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
+                                        whileFocus={{ scale: 1.02 }}
                                     />
                                     <button
                                         type="button"
@@ -136,16 +156,19 @@ export default function Login({ status, canResetPassword }) {
                                 </button>
                             </div>
 
-                            <button
+                            <motion.button
                                 type="submit"
                                 className="w-full px-6 py-3 bg-[#63C5B5] text-white rounded-full hover:bg-[#51a898] transition-colors text-sm font-medium"
+                                whileHover={{ scale: 1.05 }}
                             >
                                 {activeTab === 'login' ? 'Login' : 'Register'}
-                            </button>
+                            </motion.button>
                         </form>
                     </div>
-                </div>
+                </motion.div>
             </div>
         </>
     );
-}
+};
+
+export default Login;
