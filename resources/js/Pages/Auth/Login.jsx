@@ -102,7 +102,7 @@ const Login = ({ status, canResetPassword }) => {
 
                         <form onSubmit={submit} className="space-y-6">
                             <div>
-                                <label className="block text-gray-600 text-sm mb-2">User name</label>
+                                <label className="block text-gray-600 text-sm mb-2">Email:</label>
                                 <motion.input
                                     type="text"
                                     placeholder="Enter your Email"
