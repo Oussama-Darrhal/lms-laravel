@@ -26,16 +26,17 @@ export default function Login({ status, canResetPassword }) {
 
             <div className="min-h-screen flex">
                 {/* Left Half - Image Section */}
-                <div className="hidden md:flex md:w-1/2 relative">
-                    <div className="absolute inset-0 bg-blue-600 opacity-40" />
-                    <div className="flex justify-center items-center h-full py-16"> {/* Added padding for spacing */}
+                <div className="hidden md:flex md:w-1/2 relative m-10 bg-teal-600 rounded-3xl overflow-hidden h-[90vh]">
+                    <div className="absolute inset-0 bg-teal-700 opacity-40" />
+                    <div className="absolute inset-0 blur-sm" /> {/* Blur effect */}
+                    <div className="flex justify-center items-center h-full">
                         <img
                             src="/images/classroom.jpg"
                             alt="Classroom"
-                            className="object-cover max-h-[80%] rounded-lg" // Adjust max-height and added border radius
+                            className="object-cover w-full h-full" // Make the image cover the entire area
                         />
                     </div>
-                    <div className="absolute bottom-16 left-8 text-white">
+                    <div className="absolute bottom-16 left-8 text-white z-10"> {/* Ensure text is on top */}
                         <h2 className="text-4xl font-bold mb-2">Lorem Ipsum is simply</h2>
                         <p className="text-xl">Lorem Ipsum is simply</p>
                     </div>
