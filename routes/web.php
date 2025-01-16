@@ -15,7 +15,7 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('welcome');
 
 Route::get('/courses', [CourseController::class, 'index'])->name('courses.index'); // Show all courses
 Route::get('/courses/{id}/enrolled', [CourseController::class, 'enrolled'])->name('courses.enrolled'); // Enroll in a course

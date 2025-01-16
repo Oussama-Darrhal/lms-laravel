@@ -28,13 +28,13 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        return redirect('/');
+        return redirect(route('welcome'));
     }
 
     /**
@@ -50,6 +50,6 @@ class AuthenticatedSessionController extends Controller
 
         Cookie::queue(Cookie::forget('remember_token'));
 
-        return redirect('/');
+        return redirect(route('welcome', absolute: false));
     }
 }

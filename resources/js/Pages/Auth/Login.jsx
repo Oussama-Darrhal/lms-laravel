@@ -23,21 +23,6 @@ const Login = ({ status, canResetPassword }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [activeTab, setActiveTab] = useState("login");
 
-    useEffect(() => {
-        const currentPath = window.location.pathname;
-        if (currentPath.includes("register")) {
-            setActiveTab("register");
-        } else {
-            setActiveTab("login");
-        }
-
-        document.body.style.overflow = "hidden";
-
-        return () => {
-            document.body.style.overflow = "auto";
-        };
-    }, []);
-
     const submit = (e) => {
         e.preventDefault();
         post(route("login"), {
@@ -49,7 +34,7 @@ const Login = ({ status, canResetPassword }) => {
         <>
             <Head title="Login" />
 
-            <div className="min-h-screen flex">
+            <div className="min-h-screen flex overflow-hidden">
                 <motion.div
                     className="hidden md:flex md:w-1/2 relative m-10 bg-teal-600 rounded-3xl overflow-hidden"
                     variants={sectionVariants}
@@ -140,27 +125,34 @@ const Login = ({ status, canResetPassword }) => {
                             </div>
 
                             <div className="flex items-center justify-between">
-                                <label className="flex items-center">
+                                <motion.label whileHover={{ scale: 1.01 }} className="flex items-center">
                                     <input
                                         type="checkbox"
                                         className="w-4 h-4 rounded border-gray-300 text-[#63C5B5] focus:ring-[#63C5B5]"
                                         checked={data.remember}
                                         onChange={(e) => setData("remember", e.target.checked)}
                                     />
-                                    <span className="ml-2 text-sm text-gray-600">Keep me signed in</span>
-                                </label>
-                                <button
+                                    <span
+                                        className="ml-2 text-sm text-gray-600 cursor-pointer"
+                                    >
+                                        Keep me signed in
+                                    </span>
+                                </motion.label>
+
+                                <motion.button
+                                    whileHover={{ scale: 1.01 }}
                                     type="button"
+                                    onClick={() => router.visit("/forgot-password")}
                                     className="text-sm text-gray-600 hover:text-[#63C5B5]"
                                 >
                                     Forgot Password?
-                                </button>
+                                </motion.button>
                             </div>
 
                             <motion.button
+                                whileHover={{ scale: 1.05 }}
                                 type="submit"
                                 className="w-full px-6 py-3 bg-[#63C5B5] text-white rounded-full hover:bg-[#51a898] transition-colors text-sm font-medium"
-                                whileHover={{ scale: 1.05 }}
                             >
                                 {activeTab === "login" ? "Sign In" : "Register"}
                             </motion.button>
