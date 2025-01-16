@@ -29,8 +29,13 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("register"), {
-            onFinish: () => reset("password", "password_confirmation"),
+            onSuccess: () => reset("password", "password_confirmation"),
+            onFinish: () => { /* Optionally handle post submission actions */ }
         });
+    };
+
+    const getInputClassNames = (field) => {
+        return `w-full px-6 py-3 rounded-full border ${errors[field] ? 'border-red-500' : 'border-[#63C5B5]'} focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm`;
     };
 
     return (
@@ -99,7 +104,7 @@ const Register = () => {
                                     whileFocus={{ scale: 1.02 }}
                                     type="text"
                                     placeholder="Enter your Full Name"
-                                    className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
+                                    className={getInputClassNames('name')}
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                 />
@@ -112,7 +117,7 @@ const Register = () => {
                                     whileFocus={{ scale: 1.02 }}
                                     type="email"
                                     placeholder="Enter your Email"
-                                    className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
+                                    className={getInputClassNames('email')}
                                     value={data.email}
                                     onChange={(e) => setData('email', e.target.value)}
                                 />
@@ -126,7 +131,7 @@ const Register = () => {
                                         whileFocus={{ scale: 1.02 }}
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder="Enter your Password"
-                                        className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
+                                        className={getInputClassNames('password')}
                                         value={data.password}
                                         onChange={(e) => setData('password', e.target.value)}
                                     />
@@ -148,7 +153,7 @@ const Register = () => {
                                         whileFocus={{ scale: 1.02 }}
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         placeholder="Confirm your Password"
-                                        className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
+                                        className={getInputClassNames('password_confirmation')}
                                         value={data.password_confirmation}
                                         onChange={(e) => setData('password_confirmation', e.target.value)}
                                     />
@@ -167,11 +172,11 @@ const Register = () => {
                                 whileHover={{ scale: 1.05 }}
                                 type="submit"
                                 className="w-full px-6 py-3 bg-[#63C5B5] text-white rounded-full hover:bg-[#51a898] transition-colors text-sm font-medium"
+                                disabled={processing} // Disable button while processing
                             >
                                 Sign Up
                             </motion.button>
                         </form>
-
                     </div>
                 </motion.div>
             </div>

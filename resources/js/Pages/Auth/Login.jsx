@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Head, useForm } from "@inertiajs/react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
@@ -28,6 +28,10 @@ const Login = ({ status, canResetPassword }) => {
         post(route("login"), {
             onFinish: () => reset("password"),
         });
+    };
+
+    const getInputClassNames = (field) => {
+        return `w-full px-6 py-3 rounded-full border ${errors[field] ? 'border-red-500' : 'border-[#63C5B5]'} focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm`;
     };
 
     return (
@@ -92,11 +96,12 @@ const Login = ({ status, canResetPassword }) => {
                                 <motion.input
                                     type="text"
                                     placeholder="Enter your email"
-                                    className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
+                                    className={getInputClassNames('email')}
                                     value={data.email}
                                     onChange={(e) => setData("email", e.target.value)}
                                     whileFocus={{ scale: 1.02 }}
                                 />
+                                {errors.email && <div className="text-red-500 text-sm mt-2">{errors.email}</div>}
                             </div>
 
                             <div>
@@ -105,7 +110,7 @@ const Login = ({ status, canResetPassword }) => {
                                     <motion.input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Enter your password"
-                                        className="w-full px-6 py-3 rounded-full border border-[#63C5B5] focus:outline-none focus:border-[#63C5B5] placeholder-gray-400 text-sm"
+                                        className={getInputClassNames('password')}
                                         value={data.password}
                                         onChange={(e) => setData("password", e.target.value)}
                                         whileFocus={{ scale: 1.02 }}
@@ -122,6 +127,7 @@ const Login = ({ status, canResetPassword }) => {
                                         )}
                                     </button>
                                 </div>
+                                {errors.password && <div className="text-red-500 text-sm mt-2">{errors.password}</div>}
                             </div>
 
                             <div className="flex items-center justify-between">
@@ -132,11 +138,7 @@ const Login = ({ status, canResetPassword }) => {
                                         checked={data.remember}
                                         onChange={(e) => setData("remember", e.target.checked)}
                                     />
-                                    <span
-                                        className="ml-2 text-sm text-gray-600 cursor-pointer"
-                                    >
-                                        Keep me signed in
-                                    </span>
+                                    <span className="ml-2 text-sm text-gray-600 cursor-pointer">Keep me signed in</span>
                                 </motion.label>
 
                                 <motion.button
@@ -153,8 +155,9 @@ const Login = ({ status, canResetPassword }) => {
                                 whileHover={{ scale: 1.05 }}
                                 type="submit"
                                 className="w-full px-6 py-3 bg-[#63C5B5] text-white rounded-full hover:bg-[#51a898] transition-colors text-sm font-medium"
+                                disabled={processing} // Disable button while processing
                             >
-                                {activeTab === "login" ? "Sign In" : "Register"}
+                                Sign In
                             </motion.button>
                         </form>
                     </div>

@@ -34,7 +34,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect(route('welcome'));
+        return Inertia::location(route('welcome'));
+
     }
 
     /**
@@ -48,6 +49,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect(route('welcome'));
+        Cookie::queue(Cookie::forget('remember_token'));
+
+        return Inertia::location(route('welcome'));
     }
 }
