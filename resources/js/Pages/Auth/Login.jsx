@@ -128,7 +128,7 @@ const Login = ({ status, canResetPassword }) => {
                                 <motion.label whileHover={{ scale: 1.01 }} className="flex items-center">
                                     <input
                                         type="checkbox"
-                                        className="w-4 h-4 rounded border-gray-300 text-[#63C5B5] focus:ring-[#63C5B5]"
+                                        className="cursor-pointer w-4 h-4 rounded border-gray-300 text-[#63C5B5] focus:ring-[#63C5B5]"
                                         checked={data.remember}
                                         onChange={(e) => setData("remember", e.target.checked)}
                                     />
