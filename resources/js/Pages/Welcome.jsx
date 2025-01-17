@@ -9,6 +9,7 @@ import CallToAction from "@/Components/CallToAction";
 import Testimonials from "@/Components/Testimonials";
 import FAQSection from "@/Components/FAQSection";
 import Footer from "@/Components/Footer";
+import MainLayout from "@/Layouts/MainLayout";
 
 const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -26,78 +27,81 @@ const slideFromRightVariants = {
 };
 
 const LandingPage = () => (
-    <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
-        <Head title="Welcome" />
-        <NavBar />
+    <MainLayout>
 
-        <Hero />
+        <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
+            <Head title="Welcome" />
+            <NavBar />
 
-        {/* Stats Section */}
-        <motion.div
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-[#eef5fb] w-full"
-        >
-            <Stats />
-        </motion.div>
+            <Hero />
 
-        {/* Features Section */}
-        <motion.div
-            variants={slideFromLeftVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mx-auto max-w-[150rem] px-4 sm:px-6 lg:px-6"
-        >
-            <Features />
-        </motion.div>
+            {/* Stats Section */}
+            <motion.div
+                variants={sectionVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-[#eef5fb] w-full"
+            >
+                <Stats />
+            </motion.div>
 
-        {/* CallToAction Section */}
-        <div
-            variants={slideFromRightVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="mx-auto max-w-[150rem] px-4 sm:px-6 lg:px-6"
-        >
-            <CallToAction />
+            {/* Features Section */}
+            <motion.div
+                variants={slideFromLeftVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="mx-auto max-w-[150rem] px-4 sm:px-6 lg:px-6"
+            >
+                <Features />
+            </motion.div>
+
+            {/* CallToAction Section */}
+            <div
+                variants={slideFromRightVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="mx-auto max-w-[150rem] px-4 sm:px-6 lg:px-6"
+            >
+                <CallToAction />
+            </div>
+
+            {/* Testimonials Section */}
+            <motion.div
+                variants={sectionVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-[#eef5fb] w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
+            >
+                <Testimonials />
+            </motion.div>
+
+            {/* FAQ Section */}
+            <motion.div
+                variants={slideFromLeftVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-white w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
+            >
+                <FAQSection />
+            </motion.div>
+
+            {/* Footer Section */}
+            <motion.div
+                variants={slideFromRightVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-[#1d1f53] w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
+            >
+                <Footer />
+            </motion.div>
         </div>
-
-        {/* Testimonials Section */}
-        <motion.div
-            variants={sectionVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-[#eef5fb] w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
-        >
-            <Testimonials />
-        </motion.div>
-
-        {/* FAQ Section */}
-        <motion.div
-            variants={slideFromLeftVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-white w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
-        >
-            <FAQSection />
-        </motion.div>
-
-        {/* Footer Section */}
-        <motion.div
-            variants={slideFromRightVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-[#1d1f53] w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
-        >
-            <Footer />
-        </motion.div>
-    </div>
+    </MainLayout>
 );
 
 export default LandingPage;

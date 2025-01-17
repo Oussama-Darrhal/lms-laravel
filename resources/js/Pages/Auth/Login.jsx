@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Head, useForm } from "@inertiajs/react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { router } from "@inertiajs/react";
+import MainLayout from "@/Layouts/MainLayout";
 
 const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -35,7 +36,7 @@ const Login = ({ status, canResetPassword }) => {
     };
 
     return (
-        <>
+        <MainLayout>
             <Head title="Login" />
 
             <div className="min-h-screen flex overflow-hidden">
@@ -163,7 +164,7 @@ const Login = ({ status, canResetPassword }) => {
                     </div>
                 </motion.div>
             </div>
-        </>
+        </MainLayout>
     );
 };
 

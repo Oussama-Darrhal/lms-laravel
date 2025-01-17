@@ -4,6 +4,7 @@ import { Head, useForm } from "@inertiajs/react";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import InputError from "@/Components/InputError";
 import { router } from '@inertiajs/react';
+import MainLayout from "@/Layouts/MainLayout";
 
 const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -39,7 +40,7 @@ const Register = () => {
     };
 
     return (
-        <>
+        <MainLayout>
             <Head title="Register" />
 
             <div className="min-h-screen flex overflow-hidden">
@@ -180,7 +181,7 @@ const Register = () => {
                     </div>
                 </motion.div>
             </div>
-        </>
+        </MainLayout>
     );
 };
 
