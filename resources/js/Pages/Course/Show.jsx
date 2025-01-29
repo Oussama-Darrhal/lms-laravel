@@ -244,8 +244,11 @@ const TestimonialCard = ({ testimonial }) => {
     const { course } = usePage().props; // Get the course data
     const dropdownRef = useRef(null); // Create a ref for the dropdown menu
 
-    // Check if the logged-in user is the one who made the testimonial
-    const isUserOwner = auth.user.id === testimonial.user.id;
+    // Check if the logged-in user exists and is the one who made the testimonial
+    const isUserOwner = auth.user && auth.user.id === testimonial.user.id;
+
+    // Fallback to a doll image if no profile picture is available
+    const profilePicture = testimonial.user.profile_picture || '/images/pfp-2.jpg'; // Replace with the actual path to your doll image
 
     const handleToggleMenu = () => {
         setIsOpen(!isOpen);
@@ -257,7 +260,7 @@ const TestimonialCard = ({ testimonial }) => {
     };
 
     const handleDelete = async () => {
-        // Logic for deleting the testimonial
+        if (!testimonial.id) return; // Ensure there's an id to delete
         console.log('Delete testimonial:', testimonial.id);
         try {
             const response = await axios.delete(`/testimonials/${testimonial.id}`);
@@ -362,7 +365,7 @@ const TestimonialCard = ({ testimonial }) => {
                     <div className="flex items-center space-x-4 mb-4">
                         <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
                             <img
-                                src={testimonial.user.profile_picture}
+                                src={profilePicture} // Use the profile picture or fallback to the doll image
                                 alt={testimonial.user.name}
                                 className="w-full h-full object-cover"
                             />
@@ -372,31 +375,27 @@ const TestimonialCard = ({ testimonial }) => {
                             <p className="text-sm text-gray-600">{testimonial.user.role}</p>
                         </div>
                         {isUserOwner && (
-                            <div className="relative" ref={dropdownRef}>
-                                <button onClick={handleToggleMenu} className="focus:outline-none">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-5 w-5 text-gray-600"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <circle cx="12" cy="12" r="2" />
-                                        <circle cx="12" cy="6" r="2" />
-                                        <circle cx="12" cy="18" r="2" />
-                                    </svg>
+                            <div className="absolute top-2 right-2">
+                                <button
+                                    onClick={handleToggleMenu}
+                                    className="text-gray-500 hover:text-gray-700"
+                                >
+                                    <Icons.MoreVertical className="w-5 h-5" />
                                 </button>
                                 {isOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                    <div
+                                        ref={dropdownRef}
+                                        className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10"
+                                    >
                                         <button
                                             onClick={handleEdit}
-                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            className="block w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-100"
                                         >
                                             Edit
                                         </button>
                                         <button
                                             onClick={handleDelete}
-                                            className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            className="block w-full px-4 py-2 text-left text-red-500 hover:bg-gray-100"
                                         >
                                             Delete
                                         </button>
@@ -405,20 +404,21 @@ const TestimonialCard = ({ testimonial }) => {
                             </div>
                         )}
                     </div>
-                    <div className="flex mb-3">
-                        {[...Array(parseInt(testimonial.rating))].map((_, i) => (
+                    <div className="text-gray-600">{testimonial.testimonial}</div>
+                    <div className="flex items-center space-x-2 mt-2">
+                        {[...Array(5)].map((_, i) => (
                             <Star
                                 key={i}
-                                className="w-4 h-4 text-yellow-400 fill-current"
+                                className={`w-4 h-4 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-300'} fill-current`}
                             />
                         ))}
                     </div>
-                    <p className="text-gray-700">{testimonial.testimonial}</p>
                 </>
             )}
         </div>
     );
 };
+
 
 export default function Show({ course, breadcrumbs, testimonials, teachingMethods, user, prerequisites, description }) {
     const [activeTab, setActiveTab] = useState("Description");
