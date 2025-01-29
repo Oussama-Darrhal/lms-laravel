@@ -7,15 +7,6 @@ import Categories from "@/Components/Categories";
 import CourseGrid from "./CourseGrid";
 import Footer from "@/Components/Footer";
 
-const categories = [
-    { id: "ui-design", label: "UI Design", active: true },
-    { id: "programming", label: "Programming" },
-    { id: "marketing", label: "Marketing" },
-    { id: "soft-skill", label: "Soft Skill" },
-    { id: "network", label: "Network" },
-    { id: "data-analyst", label: "Data Analyst" },
-];
-
 // const courses = [
 //     {
 //         id: 1,
@@ -91,7 +82,7 @@ const categories = [
 //     },
 // ];
 
-export default function Index({ courses, breadcrumbs }) {
+export default function Index({ courses, categories, breadcrumbs }) {
 
     const preparedCourses = courses.map((course) => ({
         ...course,

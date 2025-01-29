@@ -30,11 +30,13 @@ class Course extends Model
         return $this->hasMany(Testimonial::class);
     }
 
-    public function teachingmethods(): BelongsToMany {
+    public function teachingmethods(): BelongsToMany
+    {
         return $this->BelongsToMany(TeachingMethod::class, 'course_teaching_methods');
     }
 
-    public function prerequisites() {
+    public function prerequisites()
+    {
         return $this->hasMany(Prerequisites::class);
     }
 
@@ -52,10 +54,16 @@ class Course extends Model
         return $coursesWithStats;
     }
 
-    public function description() {
+    public function description()
+    {
         return $this->hasOne(Description::class);
     }
 
-    protected $fillable = ['titre', 'description', 'image'];
+    protected $fillable = ['titre', 'description', 'image', 'category_id'];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
 }

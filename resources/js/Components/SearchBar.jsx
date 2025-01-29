@@ -12,10 +12,10 @@ export default function SearchBar() {
                     // Scroll down to the courses section after the page updates
                     setTimeout(() => {
                         window.scrollTo({
-                            top: 300, // Adjust this value based on your layout
+                            top: 300,
                             behavior: "smooth",
                         });
-                    }, 100); // Delay to allow inertia to process navigation
+                    }, 100);
                 }
             });
         } else {
@@ -24,10 +24,10 @@ export default function SearchBar() {
                     // Scroll down to the courses section after the page updates
                     setTimeout(() => {
                         window.scrollTo({
-                            top: 300, // Adjust this value based on your layout
+                            top: 300,
                             behavior: "smooth",
                         });
-                    }, 100); // Delay to allow inertia to process navigation
+                    }, 100);
                 }
             })
         }

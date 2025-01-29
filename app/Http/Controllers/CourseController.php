@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Course;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,19 +24,23 @@ class CourseController extends Controller
         }
 
         if ($category) {
-            $query->where('category', $category);
+            $query->where('category_id', $category);
         }
 
         $courses = $query->get();
 
+        $categories = Category::all();
+
         return Inertia::render('Course/Index', [
             'courses' => $courses,
+            'categories' => $categories,
             'breadcrumbs' => [
                 ['label' => 'Home', 'url' => '/'],
                 ['label' => 'Courses', 'url' => '/courses'],
             ],
         ]);
     }
+
     // Display a success page for enrolling in a course
     public function enrolled($id)
     {

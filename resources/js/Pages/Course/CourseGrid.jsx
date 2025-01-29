@@ -1,9 +1,24 @@
-import { Link } from "@inertiajs/react";
+import { Link, useLocation } from "@inertiajs/react";
 
 export default function CourseGrid({ courses }) {
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const query = queryParams.get('query');
+    const category = queryParams.get('category');
+
+    const noResultsMessage = () => {
+        if (query) {
+            return `No courses found for the search term: "${query}".`;
+        } else if (category) {
+            return `No courses found in the "${category}" category.`;
+        } else {
+            return "No courses found.";
+        }
+    };
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-16">
-            {courses.map((course) => (
+            {courses.length !== 0 ? courses.map((course) => (
                 <Link href={course.url} key={course.id} className="group">
                     <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
                         <div className="w-full h-64 overflow-hidden">
@@ -81,7 +96,14 @@ export default function CourseGrid({ courses }) {
                         </div>
                     </div>
                 </Link>
-            ))}
+            )) : (
+                <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center p-6">
+                    <h2 className="text-2xl font-bold text-gray-800">
+                        {noResultsMessage()}
+                    </h2>
+                    <p className="text-gray-600 mt-4">Please try a different search or category.</p>
+                </div>
+            )}
         </div>
     );
 }
