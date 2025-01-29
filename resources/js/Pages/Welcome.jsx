@@ -26,12 +26,26 @@ const slideFromRightVariants = {
     visible: { opacity: 1, x: 0, transition: { duration: 1.7, ease: "easeInOut" } },
 };
 
+const slideFromTopVariants = {
+    hidden: { opacity: 0, y: -25 },
+    visible: { opacity: 1, y: 0, transition: { duration: 1.7, ease: "easeInOut" } },
+};
+
 const LandingPage = () => (
     <MainLayout>
 
         <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
             <Head title="Welcome" />
-            <NavBar />
+
+            <motion.div
+                variants={slideFromTopVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="bg-[#eef5fb] w-full"
+            >
+                <NavBar />
+            </motion.div>
 
             <Hero />
 
