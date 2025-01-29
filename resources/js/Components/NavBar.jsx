@@ -38,46 +38,49 @@ const Navbar = () => {
         post(route("logout"));
     };
 
-    // Animation variants
     const linkVariants = {
-        hidden: (direction) => ({
-            opacity: 0,
-            x: direction === 'left' ? -20 : 20,
+        hidden: { opacity: 0, y: -20 },
+        visible: (i) => ({
+            opacity: 1,
+            y: 0,
+            transition: {
+                delay: i * 0.1, // Delay for each link
+            },
         }),
+    };
+
+    const buttonVariants = {
+        hidden: { opacity: 0, scale: 0.8 },
         visible: {
             opacity: 1,
-            x: 0,
+            scale: 1,
+            transition: { duration: 0.3 },
         },
     };
 
     return (
-        <nav className="bg-transparent">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <nav className="bg-transparent pt-2">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
                 <div className="flex items-center justify-between h-16">
-                    <div className="flex items-center">
-                        <div className="flex-shrink-0">
-                            <h1 className="text-white text-2xl font-light">TOTC</h1>
-                        </div>
-                        <div className="hidden md:flex flex-grow justify-center"> {/* Centering the nav links */}
-                            <div className="ml-10 flex items-baseline space-x-4">
-                                {navLinks.map((link, index) => {
-                                    const direction = Math.random() > 0.5 ? 'left' : 'right'; // Randomly choose direction
-                                    return (
-                                        <motion.a
-                                            key={link.label}
-                                            href={link.href}
-                                            className="text-white hover:text-gray-200 px-3 py-2 font-light"
-                                            initial="hidden"
-                                            animate="visible"
-                                            variants={linkVariants}
-                                            custom={direction}
-                                            transition={{ duration: 0.5, delay: index * 0.1 }} // Stagger effect
-                                        >
-                                            {link.label}
-                                        </motion.a>
-                                    );
-                                })}
-                            </div>
+                    <div className="flex-shrink-0">
+                        <h1 className="text-white text-2xl font-light">TOTC</h1>
+                    </div>
+
+                    <div className="hidden md:flex flex-grow justify-center">
+                        <div className="flex space-x-4">
+                            {navLinks.map((link, index) => (
+                                <motion.a
+                                    key={link.label}
+                                    href={link.href}
+                                    className="text-white hover:text-gray-300 px-3 py-2 font-light"
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={linkVariants}
+                                    custom={index}
+                                >
+                                    {link.label}
+                                </motion.a>
+                            ))}
                         </div>
                     </div>
 
@@ -116,13 +119,16 @@ const Navbar = () => {
                             </div>
                         ) : (
                             <>
-                                <Link href="/login" className="bg-white text-primary hover:bg-gray-100 px-4 py-2 rounded-full font-light">Login</Link>
-                                <Link href="/register" className="bg-primary-dark text-white hover:bg-opacity-90 px-4 py-2 rounded-full font-light">Sign Up</Link>
+                                <motion.div initial="hidden" animate="visible" variants={buttonVariants}>
+                                    <Link href="/login" className="text-black bg-white hover:bg-gray-100 px-4 py-2 rounded-full font-light text-lg transition">Login</Link>
+                                </motion.div>
+                                <motion.div initial="hidden" animate="visible" variants={buttonVariants}>
+                                    <Link href="/register" className="bg-primary-dark text-white hover:bg-opacity-90 px-4 py-2 rounded-full font-light text-lg transition">Sign Up</Link>
+                                </motion.div>
                             </>
                         )}
                     </div>
 
-                    {/* Mobile Menu Button */}
                     <button className="md:hidden text-white" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                         {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                     </button>
@@ -131,13 +137,64 @@ const Navbar = () => {
 
             {/* Mobile Navigation */}
             {isMenuOpen && (
-                <div className="md:hidden bg-primary-dark text-white py-4 px-6">
-                    {navLinks.map((link) => (
-                        <a key={link.label} href={link.href} className="block py-2 hover:opacity-80 transition font-light">
-                            {link.label}
-                        </a>
-                    ))}
-                </div>
+                <motion.div
+                    className="fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center z-50 p-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <button className="absolute top-4 right-4 text-white" onClick={() => setIsMenuOpen(false)}>
+                        <X className="h-6 w-6" />
+                    </button>
+                    <div className="flex flex-col space-y-6">
+                        {navLinks.map((link, index) => (
+                            <motion.div
+                                key={link.label}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                transition={{ duration: 0.3, delay: index * 0.1 }} // Each link appears with a delay
+                            >
+                                <Link
+                                    href={link.href}
+                                    className="text-white text-2xl hover:scale-105 transition"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {link.label}
+                                </Link>
+                            </motion.div>
+                        ))}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.3, delay: navLinks.length * 0.1 }} // Delay for login
+                        >
+                            <Link
+                                href="/login"
+                                className="text-black bg-white hover:bg-gray-100 px-6 py-2 rounded-full font-light text-lg transition"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Login
+                            </Link>
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.3, delay: navLinks.length * 0.1 + 0.1 }} // Delay for signup
+                        >
+                            <Link
+                                href="/register"
+                                className="bg-primary-dark text-white hover:bg-opacity-90 px-6 py-2 rounded-full font-light text-lg transition"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Sign Up
+                            </Link>
+                        </motion.div>
+                    </div>
+                </motion.div>
             )}
         </nav>
     );
