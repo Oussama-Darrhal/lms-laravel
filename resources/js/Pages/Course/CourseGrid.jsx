@@ -1,16 +1,24 @@
-import { Link, useLocation } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 
 export default function CourseGrid({ courses }) {
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const query = queryParams.get('query');
-    const category = queryParams.get('category');
+    // Access query parameters directly from the URL using `usePage`
+    const { url } = usePage();
 
+    // Create a URLSearchParams object from the current URL
+    const searchParams = new URLSearchParams(url.split('?')[1]);
+
+    // Get the values for search and category from the query parameters
+    const query = searchParams.get('search') || '';
+    const category = searchParams.get('category') || '';
+
+    // Function to display the appropriate message when no courses are found
     const noResultsMessage = () => {
-        if (query) {
+        if (query && category) {
+            return `No courses found for the search term "${query}" in this category.`;
+        } else if (query) {
             return `No courses found for the search term: "${query}".`;
         } else if (category) {
-            return `No courses found in the "${category}" category.`;
+            return `No courses found in this category.`;
         } else {
             return "No courses found.";
         }

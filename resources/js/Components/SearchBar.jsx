@@ -6,36 +6,45 @@ export default function SearchBar() {
     const [query, setQuery] = useState("");
 
     const handleSearch = () => {
+        const queryParams = new URLSearchParams(window.location.search);
         if (query.trim()) {
-            router.get('/courses', { search: query }, {
-                onSuccess: () => {
-                    // Scroll down to the courses section after the page updates
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: 300,
-                            behavior: "smooth",
-                        });
-                    }, 100);
-                }
-            });
+            queryParams.set('search', query); // Set the search query in the URL
         } else {
-            router.get('/courses', {
-                onSuccess: () => {
-                    // Scroll down to the courses section after the page updates
-                    setTimeout(() => {
-                        window.scrollTo({
-                            top: 300,
-                            behavior: "smooth",
-                        });
-                    }, 100);
-                }
-            })
+            queryParams.delete('search'); // Remove search if empty
         }
+
+        // Preserve the category parameter if it exists
+        const categoryQuery = queryParams.get('category');
+        if (categoryQuery) {
+            queryParams.set('category', categoryQuery); // Add the existing category
+        }
+
+        // Update the URL
+        router.get(`/courses?${queryParams.toString()}`, {
+            onSuccess: () => {
+                // Scroll down to the courses section after the page updates
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: 300,
+                        behavior: "smooth",
+                    });
+                }, 100);
+            }
+        });
     };
 
     const handleClear = () => {
         setQuery("");
-        router.get('/courses', {}, {
+        const queryParams = new URLSearchParams(window.location.search);
+        queryParams.delete('search'); // Clear search query
+
+        // Preserve the category if exists
+        const categoryQuery = queryParams.get('category');
+        if (categoryQuery) {
+            queryParams.set('category', categoryQuery);
+        }
+
+        router.get(`/courses?${queryParams.toString()}`, {
             onSuccess: () => {
                 setTimeout(() => {
                     window.scrollTo({

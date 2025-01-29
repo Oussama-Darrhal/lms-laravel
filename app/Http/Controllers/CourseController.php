@@ -13,24 +13,32 @@ class CourseController extends Controller
     // Display a list of all courses
     public function index(Request $request)
     {
+        // Retrieve search and category from the request query
         $search = $request->query('search');
         $category = $request->query('category');
 
         $query = Course::query();
 
-        if ($search) {
-            $query->where('titre', 'like', "%{$search}%") // Adjust column name if needed
-                ->orWhere('description', 'like', "%{$search}%"); // Adjust column name if needed
-        }
-
+        // If there's a category selected, filter courses by category first
         if ($category) {
             $query->where('category_id', $category);
         }
 
+        // If there's a search term, apply the search filter (title or description)
+        if ($search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('titre', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        // Get the filtered courses
         $courses = $query->get();
 
+        // Retrieve all categories to be passed to the view
         $categories = Category::all();
 
+        // Return the view with the courses and categories data
         return Inertia::render('Course/Index', [
             'courses' => $courses,
             'categories' => $categories,
@@ -38,8 +46,11 @@ class CourseController extends Controller
                 ['label' => 'Home', 'url' => '/'],
                 ['label' => 'Courses', 'url' => '/courses'],
             ],
+            'search' => $search,  // Pass search term to the view for re-populating the search bar
+            'category' => $category,  // Pass selected category to the view for re-populating the category filter
         ]);
     }
+
 
     // Display a success page for enrolling in a course
     public function enrolled($id)

@@ -12,8 +12,17 @@ export default function Categories({ categories }) {
     }, [url]);
 
     const handleCategoryClick = (category_Id) => {
-        setcategoryId(category_Id);
-        router.get('/courses', { category: category_Id });
+        const queryParams = new URLSearchParams(window.location.search);
+        queryParams.set('category', category_Id); // Set the category in the URL
+
+        // Preserve the search query if it exists
+        const searchQuery = queryParams.get('search');
+        if (searchQuery) {
+            queryParams.set('search', searchQuery); // Add the existing search query
+        }
+
+        // Update the URL
+        router.get(`/courses?${queryParams.toString()}`);
     };
 
     return (
