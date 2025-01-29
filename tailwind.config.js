@@ -17,6 +17,8 @@ export default {
             },
             colors: {
                 'brand-teal': '#49babc',
+                'primary': '#41B3B3',
+                'primary-dark': '#379999',
             },
             animation: {
                 float: 'float 6s ease-in-out infinite',

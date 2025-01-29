@@ -36,18 +36,10 @@ const LandingPage = () => (
 
         <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
             <Head title="Welcome" />
-
-            <motion.div
-                variants={slideFromTopVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="bg-[#eef5fb] w-full"
-            >
+            <div className="bg-primary">
                 <NavBar />
-            </motion.div>
-
-            <Hero />
+                <Hero />
+            </div>
 
             {/* Stats Section */}
             <motion.div
