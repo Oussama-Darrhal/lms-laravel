@@ -34,9 +34,9 @@ const slideFromTopVariants = {
 const LandingPage = () => (
     <MainLayout>
 
-        <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-orange-400 selection:text-black">
+        <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
             <Head title="Welcome" />
-            <div className="bg-primary">
+            <div className="bg-[#1d1f53]">
                 <NavBar />
                 <Hero />
             </div>

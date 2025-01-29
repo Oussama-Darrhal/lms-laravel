@@ -10,12 +10,24 @@ use Inertia\Inertia;
 class CourseController extends Controller
 {
     // Display a list of all courses
-    public function index()
+    public function index(Request $request)
     {
-        // Fetch all courses from the database
-        $courses = Course::all();
+        $search = $request->query('search');
+        $category = $request->query('category');
 
-        // Return the 'Course/Index' view with the courses data and breadcrumb navigation
+        $query = Course::query();
+
+        if ($search) {
+            $query->where('titre', 'like', "%{$search}%") // Adjust column name if needed
+                ->orWhere('description', 'like', "%{$search}%"); // Adjust column name if needed
+        }
+
+        if ($category) {
+            $query->where('category', $category);
+        }
+
+        $courses = $query->get();
+
         return Inertia::render('Course/Index', [
             'courses' => $courses,
             'breadcrumbs' => [
@@ -24,7 +36,6 @@ class CourseController extends Controller
             ],
         ]);
     }
-
     // Display a success page for enrolling in a course
     public function enrolled($id)
     {

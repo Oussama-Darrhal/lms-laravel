@@ -25,8 +25,8 @@ export default {
             },
             keyframes: {
                 float: {
-                    '0%, 100%': { transform: 'translateY(0) rotate(-2deg)' },
-                    '50%': { transform: 'translateY(-20px) rotate(2deg)' },
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-20px)' },
                 }
             }
         },

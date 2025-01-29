@@ -2,36 +2,36 @@ import { Link } from "@inertiajs/react";
 
 export default function CourseGrid({ courses }) {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-24 my-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-16">
             {courses.map((course) => (
-                <Link href={course.url} key={course.id}>
-                    <div className="bg-white rounded-lg overflow-hidden shadow-md h-full flex flex-col">
-                        <div className="w-full h-80 overflow-hidden">
+                <Link href={course.url} key={course.id} className="group">
+                    <div className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+                        <div className="w-full h-64 overflow-hidden">
                             <img
                                 src={course.image}
                                 alt={course.title}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                             />
                         </div>
                         <div className="p-6 flex-1 flex flex-col">
-                            <div className="flex justify-between items-start mb-2">
-                                <h3 className="text-xl font-semibold truncate">
+                            <div className="flex justify-between items-start mb-4">
+                                <h3 className="text-2xl font-bold text-gray-800 truncate">
                                     {course.title}
                                 </h3>
-                                <div className="flex items-center">
-                                    <span className="text-yellow-400">★</span>
-                                    <span className="ml-1">
+                                <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
+                                    <span className="text-yellow-500">★</span>
+                                    <span className="ml-1 text-yellow-600 font-medium">
                                         {course.rating}
                                     </span>
                                 </div>
                             </div>
-                            <p className="text-gray-600 mb-4 flex-1">
+                            <p className="text-gray-600 mb-6 flex-1 line-clamp-3">
                                 {course.description}
                             </p>
-                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <div className="flex items-center gap-4 text-sm text-gray-500 border-t pt-4">
                                 <span className="flex items-center">
                                     <svg
-                                        className="w-4 h-4 mr-1"
+                                        className="w-5 h-5 mr-2 text-gray-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -47,7 +47,7 @@ export default function CourseGrid({ courses }) {
                                 </span>
                                 <span className="flex items-center">
                                     <svg
-                                        className="w-4 h-4 mr-1"
+                                        className="w-5 h-5 mr-2 text-gray-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"
@@ -63,7 +63,7 @@ export default function CourseGrid({ courses }) {
                                 </span>
                                 <span className="flex items-center">
                                     <svg
-                                        className="w-4 h-4 mr-1"
+                                        className="w-5 h-5 mr-2 text-gray-400"
                                         fill="none"
                                         stroke="currentColor"
                                         viewBox="0 0 24 24"

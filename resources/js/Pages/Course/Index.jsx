@@ -8,8 +8,7 @@ import CourseGrid from "./CourseGrid";
 import Footer from "@/Components/Footer";
 
 const categories = [
-    { id: "semua", label: "Semua", active: true },
-    { id: "ui-design", label: "UI Design" },
+    { id: "ui-design", label: "UI Design", active: true },
     { id: "programming", label: "Programming" },
     { id: "marketing", label: "Marketing" },
     { id: "soft-skill", label: "Soft Skill" },
@@ -113,7 +112,7 @@ export default function Index({ courses, breadcrumbs }) {
             <NavBar />
             <Breadcrumbs breadcrumbs={breadcrumbs} />
 
-            <main className="max-w-[150rem] px-4 sm:px-6 lg:px-8 mx-auto py-8">
+            <main className="max-w-[150rem] px-4 sm:px-6 lg:px-8 mx-auto py-4">
                 <div className="max-w-3xl mx-auto">
                     {/* Search Bar */}
                     <SearchBar />
