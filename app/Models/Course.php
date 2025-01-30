@@ -18,6 +18,12 @@ class Course extends Model
         return $this->hasMany(Enrollment::class);
     }
 
+    public function teachers()
+    {
+        return $this->belongsToMany(User::class)
+            ->where('role', 'teacher');
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class)
@@ -65,5 +71,9 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    protected $casts = [
+        'bookmarks' => 'array',
+    ];
 
 }

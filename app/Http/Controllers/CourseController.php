@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Course;
 use App\Models\User;
+use DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -129,6 +130,39 @@ class CourseController extends Controller
 
         // Redirect the user to the course index page with a success message
         return redirect()->route('courses.index')->with('success', 'Course created successfully!');
+    }
+
+    // Bookmark a course
+    public function bookmark(Course $course, Request $request)
+    {
+        $userId = $request->user()->id;
+
+        // Add the user ID to the bookmarks array
+        $bookmarks = $course->bookmarks ?? [];
+        if (!in_array($userId, $bookmarks)) {
+            $bookmarks[] = $userId;
+            DB::table('courses')
+                ->where('id', $course->id)
+                ->update(['bookmarks' => $bookmarks]);
+        }
+
+        return redirect()->back();
+    }
+
+    // Unbookmark a course
+    public function unbookmark(Course $course, Request $request)
+    {
+        $userId = $request->user()->id;
+
+        // Remove the user ID from the bookmarks array
+        $bookmarks = $course->bookmarks ?? [];
+        $bookmarks = array_filter($bookmarks, fn($id) => $id !== $userId);
+
+        DB::table('courses')
+            ->where('id', $course->id)
+            ->update(['bookmarks' => $bookmarks]);
+
+        return redirect()->back();
     }
 
 }

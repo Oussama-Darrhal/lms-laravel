@@ -55,4 +55,10 @@ class User extends Authenticatable
         return $this->hasMany(Testimonial::class);
     }
 
+    public function taughtCourses()
+    {
+        return $this->belongsToMany(Course::class)
+            ->where('role', 'teacher');
+    }
+
 }

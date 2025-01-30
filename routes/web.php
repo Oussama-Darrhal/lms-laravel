@@ -25,6 +25,8 @@ Route::get('/courses/{id}', [CourseController::class, 'show'])->name('courses.sh
 Route::get('/courses/{id}/edit', [CourseController::class, 'edit'])->name('courses.edit'); // Edit a specific course
 Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.update'); // Update a specific course
 Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
+Route::post('/courses/{course}/bookmark', [CourseController::class, 'bookmark'])->name('courses.bookmark');
+Route::post('/courses/{course}/unbookmark', [CourseController::class, 'unbookmark'])->name('courses.unbookmark');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

@@ -1,7 +1,7 @@
-import { Link, usePage } from "@inertiajs/react";
-import { Clock, Video, Users, Heart, Share2, User, Star, BookOpen } from "lucide-react";
+import { Link, router, usePage } from "@inertiajs/react";
+import { Clock, Video, Users, Heart, Share2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
 const LoadingSkeleton = () => (
     <div className="relative h-full rounded-2xl overflow-hidden bg-white shadow-md animate-pulse">
@@ -38,21 +38,20 @@ const CourseCard = ({ course }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [showShareTooltip, setShowShareTooltip] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
-    const [previewPosition, setPreviewPosition] = useState("right");
+    const [previewStyle, setPreviewStyle] = useState({});
+    const [usePortal, setUsePortal] = useState(false);
     const hoverTimeout = useRef(null);
-    const stickTimeout = useRef(null);
     const cardRef = useRef(null);
+    const previewRef = useRef(null);
+    const { auth } = usePage().props;
+
+
 
     const handleShare = (e) => {
         e.preventDefault();
         setShowShareTooltip(true);
         navigator.clipboard.writeText(window.location.origin + course.url);
         setTimeout(() => setShowShareTooltip(false), 2000);
-    };
-
-    const handleBookmark = (e) => {
-        e.preventDefault();
-        setIsBookmarked(!isBookmarked);
     };
 
     const handleMouseEnter = () => {
@@ -63,33 +62,99 @@ const CourseCard = ({ course }) => {
 
     const handleMouseLeave = () => {
         clearTimeout(hoverTimeout.current);
-        // Delay hiding the preview to allow scrolling
-        stickTimeout.current = setTimeout(() => {
-            setShowPreview(false);
-        }, 1000); // 1 second delay
+        setShowPreview(false);
     };
+
+    // Check if the course is bookmarked by the current user
+    if (auth.user) {
+        useEffect(() => {
+            if (course.bookmarks && course.bookmarks.includes(auth.user.id)) {
+                setIsBookmarked(true);
+            } else {
+                setIsBookmarked(false);
+            }
+        }, [course.bookmarks, auth.user.id]);
+    }
 
     useEffect(() => {
         if (showPreview && cardRef.current) {
             const cardRect = cardRef.current.getBoundingClientRect();
             const viewportWidth = window.innerWidth;
+            const previewWidth = 384; // w-96
 
-            // Check if there's enough space to the right
-            if (cardRect.right + 400 > viewportWidth) {
-                setPreviewPosition("left");
-            } else {
-                setPreviewPosition("right");
+            let shouldUsePortal = false;
+            let newStyle = {};
+
+            if (true) {
+                // Use portal for overlay
+                shouldUsePortal = true;
+                newStyle = {
+                    position: 'fixed',
+                    left: Math.min(
+                        cardRect.right + 16,
+                        viewportWidth - previewWidth - 16
+                    ) + 'px',
+                    top: Math.min(
+                        cardRect.top,
+                        window.innerHeight - 400
+                    ) + 'px',
+                    animation: 'fadeInScale 0.3s ease-out forwards',
+                    zIndex: 9999
+                };
             }
+
+            setUsePortal(shouldUsePortal);
+            setPreviewStyle(newStyle);
         }
     }, [showPreview]);
 
-    // Clear timeouts on unmount
-    useEffect(() => {
-        return () => {
-            clearTimeout(hoverTimeout.current);
-            clearTimeout(stickTimeout.current);
-        };
-    }, []);
+    const handleBookmark = (e) => {
+        e.preventDefault();
+
+        if (!auth.user) {
+            setIsBookmarked(!isBookmarked);
+        } else {
+
+            if (isBookmarked) {
+                // Unbookmark the course
+                router.post(route('courses.unbookmark', course.id), {}, {
+                    preserveScroll: true,
+                });
+            } else {
+                // Bookmark the course
+                router.post(route('courses.bookmark', course.id), {}, {
+                    preserveScroll: true,
+                });
+            }
+
+            // Toggle the bookmark state
+            setIsBookmarked(!isBookmarked);
+        }
+    };
+
+    const PreviewContent = () => (
+        <div
+            ref={previewRef}
+            className="w-96 bg-white rounded-2xl shadow-xl backdrop-blur-sm bg-white/95"
+            style={previewStyle}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className="p-6">
+                <h4 className="text-xl font-bold mb-4">Course Preview</h4>
+                <video
+                    className="w-full rounded-lg mb-4"
+                    controls
+                    src={course.previewVideo || "https://example.com/preview.mp4"}
+                >
+                    Your browser does not support the video tag.
+                </video>
+                <p className="text-sm text-gray-600">
+                    Get a sneak peek of what you'll learn in this course.
+                </p>
+            </div>
+        </div>
+    );
 
     return (
         <div
@@ -98,6 +163,41 @@ const CourseCard = ({ course }) => {
             onMouseLeave={handleMouseLeave}
             ref={cardRef}
         >
+            <style jsx global>{`
+                @keyframes slideInFromRight {
+                    from {
+                        opacity: 0;
+                        transform: translateX(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+                @keyframes slideInFromLeft {
+                    from {
+                        opacity: 0;
+                        transform: translateX(-20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateX(0);
+                    }
+                }
+
+                @keyframes fadeInScale {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.95);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+            `}</style>
+
             <Link href={course.url} className="block group">
                 <div className="relative h-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300">
                     {/* Course Image Container */}
@@ -114,8 +214,7 @@ const CourseCard = ({ course }) => {
                                 className="p-2 rounded-full bg-white/90 hover:bg-white transition-colors"
                             >
                                 <Heart
-                                    className={`w-5 h-5 ${isBookmarked ? 'fill-pink-500 text-pink-500' : 'text-gray-600'
-                                        }`}
+                                    className={`w-5 h-5 ${isBookmarked ? 'fill-pink-500 text-pink-500' : 'text-gray-600'}`}
                                 />
                             </button>
                             <button
@@ -138,17 +237,12 @@ const CourseCard = ({ course }) => {
 
                     {/* Course Details */}
                     <div className="p-6">
-                        {/* Title */}
                         <h3 className="text-xl font-bold text-gray-800 line-clamp-2 mb-3 min-h-[3.5rem] group-hover:text-blue-600 transition-colors">
                             {course.title}
                         </h3>
-
-                        {/* Description */}
                         <p className="text-gray-600 line-clamp-3 mb-6 text-sm">
                             {course.description}
                         </p>
-
-                        {/* Course Stats */}
                         <div className="grid grid-cols-3 gap-2 mb-6">
                             <div className="flex items-center text-gray-500 bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors">
                                 <Clock className="w-4 h-4 mr-2 text-blue-500" />
@@ -163,60 +257,27 @@ const CourseCard = ({ course }) => {
                                 <span className="text-sm">{course.students}</span>
                             </div>
                         </div>
-
-                        {/* Price Tag */}
                         <div
                             className={`
-                px-6 py-2 rounded-full text-lg font-bold text-center
-                ${course.price === 0
+                                px-6 py-2 rounded-full text-lg font-bold text-center
+                                ${course.price == 0
                                     ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white"
                                     : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
                                 }
-                `}
+                            `}
                         >
-                            {course.price === 0 ? "Free!" : `$${course.price}`}
+                            {course.price == 0 ? "Free!" : `$${course.price}`}
                         </div>
                     </div>
                 </div>
             </Link>
 
             {/* Preview Section */}
-            <AnimatePresence>
-                {showPreview && (
-                    <motion.div
-                        className={`absolute top-0 ${previewPosition === "right" ? "left-full ml-4" : "right-full mr-4"
-                            } w-96 bg-white rounded-2xl shadow-xl z-50`}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.2, ease: "easeOut" }}
-                    >
-                        <div className="p-6">
-                            {/* Teacher Information */}
-                            <div className="flex items-center mb-6">
-                                <img
-                                    src={"https://via.placeholder.com/40"}
-                                    alt="teacher picture"
-                                    className="w-10 h-10 rounded-full mr-4"
-                                />
-                                <div>
-                                    <h4 className="font-bold text-gray-800">{"course.teacher.name"}</h4>
-                                    <p className="text-sm text-gray-500">{"course.teacher.bio"}</p>
-                                </div>
-                            </div>
-
-                            {/* Video Preview */}
-                            <video
-                                className="w-full rounded-lg mb-4"
-                                controls
-                                src={course.previewVideo || "https://example.com/preview.mp4"}
-                            >
-                                Your browser does not support the video tag.
-                            </video>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {showPreview && (
+                usePortal
+                    ? createPortal(<PreviewContent />, document.body)
+                    : <PreviewContent />
+            )}
         </div>
     );
 };
