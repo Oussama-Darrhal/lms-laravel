@@ -492,12 +492,13 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
 
                 {/* Navigation Tabs */}
                 <div className="border-b border-gray-200">
-                    <nav className="flex space-x-8">
+                    <nav className="flex sm:flex-row flex-col sm:space-x-8 space-y-4 sm:space-y-0 overflow-x-auto">
                         {tabs.map((tab) => (
                             <TabButton
                                 key={tab}
                                 active={activeTab === tab}
                                 onClick={() => setActiveTab(tab)}
+                                className="text-center sm:flex-1 flex-none"
                             >
                                 {tab}
                             </TabButton>
@@ -520,7 +521,7 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
                     topic, we’re here to help you continue your journey.
                 </p>
                 <button
-                    onClick={() => (window.location.href = "/courses/"+course.id+"/enrolled")}
+                    onClick={() => (window.location.href = "/courses/" + course.id + "/enrolled")}
                     className="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
                 >
                     Join the Course
