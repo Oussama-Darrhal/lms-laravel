@@ -123,7 +123,7 @@ const Footer = () => {
                     <div className="text-sm text-gray-400">
                         © Copyright Instructly 2024 - 2025
                     </div>
-                    <nav className="mt-6 md:mt-0">
+                    <nav className="mt-6 md:mt-0 hidden sm:block">
                         <ul className="flex space-x-8 text-sm">
                             <li>
                                 <a href="#" className="hover:text-gray-300">

@@ -420,7 +420,7 @@ const TestimonialCard = ({ testimonial }) => {
 };
 
 
-export default function Show({ course, breadcrumbs, testimonials, teachingMethods, user, prerequisites, description }) {
+export default function Show({ course, breadcrumbs, testimonials, teachingMethods, user, prerequisites, description, category_name }) {
     const [activeTab, setActiveTab] = useState("Description");
     const { auth } = usePage().props;
 
@@ -474,8 +474,8 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
 
             <main className="max-w-6xl px-4 sm:px-6 lg:px-8 mx-auto py-8 pb-32">
                 <div className="mb-8">
-                    <p className="text-lg sm:text-xl text-gray-600 mb-4">
-                        {course.category || "General"}
+                    <p className="text-lg sm:text-xl text-gray-600 mb-4 uppercase">
+                        {category_name || "General"}
                     </p>
                     <h2 className="text-2xl sm:text-4xl font-bold">
                         {course.titre}

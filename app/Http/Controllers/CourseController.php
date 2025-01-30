@@ -93,6 +93,8 @@ class CourseController extends Controller
         // load the description of the course
         $description = $course->description()->get()->first();
 
+        $category = Category::findOrFail($course->category_id);
+
         // Return the 'Course/Show' view with the course data, testimonials, and breadcrumb navigation
         return Inertia::render(
             'Course/Show',
@@ -103,6 +105,7 @@ class CourseController extends Controller
                 'prerequisites' => $prerequisites,
                 'description' => $description,
                 'teachingMethods' => $course->teachingmethods,
+                "category_name" => $category->name,
                 'breadcrumbs' => [
                     ['label' => 'Home', 'url' => '/'],
                     ['label' => 'Courses', 'url' => '/courses'],
