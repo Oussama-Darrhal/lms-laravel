@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion"; // Import motion from framer-motion
 import NavBar from "@/Components/NavBar";
 import { Head } from "@inertiajs/react";
 import Breadcrumbs from "@/Components/BreadCrumbs";
@@ -83,7 +84,6 @@ import Footer from "@/Components/Footer";
 // ];
 
 export default function Index({ courses, categories, breadcrumbs }) {
-
     const preparedCourses = courses.map((course) => ({
         ...course,
         title: course.titre,
@@ -94,32 +94,65 @@ export default function Index({ courses, categories, breadcrumbs }) {
         videos: course.videos || "20 Videos",
         students: course.students || "1,900 Students",
         rating: course.rating || 4.9,
-        url: `/courses/${course.id}`
+        url: `/courses/${course.id}`,
     }));
 
-    return (
-        <div className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black">
-            <Head title="Courses" />
-            <NavBar />
-            <Breadcrumbs breadcrumbs={breadcrumbs} />
+    // Animation variants
+    const fadeInUp = {
+        initial: { opacity: 0, y: 20 },
+        animate: { opacity: 1, y: 0 },
+        transition: { duration: 2.5, ease: "easeInOut" },
+    };
 
-            <main className="max-w-[150rem] px-4 sm:px-6 lg:px-8 mx-auto py-4">
-                <div className="max-w-3xl mx-auto">
+    const staggerContainer = {
+        animate: {
+            transition: {
+                staggerChildren: 0.5,
+            },
+        },
+    };
+
+    return (
+        <motion.div
+            className="min-h-screen mx-auto max-w-[150rem] selection:bg-[#fdd981] selection:text-black"
+            initial="initial"
+            animate="animate"
+            variants={staggerContainer}
+        >
+            <Head title="Courses" />
+            <motion.div variants={fadeInUp}>
+                <NavBar />
+            </motion.div>
+            <motion.div variants={fadeInUp}>
+                <Breadcrumbs breadcrumbs={breadcrumbs} />
+            </motion.div>
+
+            <motion.main
+                className="max-w-[150rem] px-4 sm:px-6 lg:px-8 mx-auto py-4"
+                variants={staggerContainer}
+            >
+                <motion.div className="max-w-3xl mx-auto" variants={fadeInUp}>
                     {/* Search Bar */}
                     <SearchBar />
-                </div>
-                <div className="max-w-4xl mx-auto">
+                </motion.div>
+                <motion.div className="max-w-4xl mx-auto" variants={fadeInUp}>
                     {/* Categories */}
                     <Categories categories={categories} />
-                </div>
+                </motion.div>
 
                 {/* Course Grid */}
-                <CourseGrid courses={preparedCourses} />
-            </main>
+                <motion.div variants={fadeInUp}>
+                    <CourseGrid courses={preparedCourses} />
+                </motion.div>
+            </motion.main>
+
             {/* Footer */}
-            <div className="bg-[#1d1f53] w-full max-w-[150rem] px-4 sm:px-6 lg:px-6">
+            <motion.div
+                className="bg-[#1d1f53] w-full max-w-[150rem] px-4 sm:px-6 lg:px-6"
+                variants={fadeInUp}
+            >
                 <Footer />
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 }

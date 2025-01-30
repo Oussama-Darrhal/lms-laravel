@@ -7,6 +7,7 @@ use App\Http\Controllers\TestimonialController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\StripeController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,6 +28,8 @@ Route::put('/courses/{id}', [CourseController::class, 'update'])->name('courses.
 Route::delete('/courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy'); // Delete a course (admin only)
 Route::post('/courses/{course}/bookmark', [CourseController::class, 'bookmark'])->name('courses.bookmark');
 Route::post('/courses/{course}/unbookmark', [CourseController::class, 'unbookmark'])->name('courses.unbookmark');
+
+Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
