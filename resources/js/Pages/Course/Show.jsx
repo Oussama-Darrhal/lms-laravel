@@ -421,7 +421,7 @@ const TestimonialCard = ({ testimonial }) => {
 };
 
 
-export default function Show({ course, breadcrumbs, testimonials, teachingMethods, user, prerequisites, description, category_name }) {
+export default function Show({ course, breadcrumbs, testimonials, teachingMethods, user, prerequisites, description, category_name, EnrolledUsers }) {
     const [activeTab, setActiveTab] = useState("Description");
     const { auth } = usePage().props;
 
@@ -521,14 +521,8 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
                     looking to sharpen your skills or dive deeper into the
                     topic, we’re here to help you continue your journey.
                 </p>
-                {/* <button
-                    onClick={() => (window.location.href = "/courses/" + course.id + "/enrolled")}
 
-                >
-
-                </button> */}
-
-                {console.log(course.price)}
+                {console.log(EnrolledUsers)}
 
                 <CheckoutButton
                     courseId={course.id}

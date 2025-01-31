@@ -82,6 +82,9 @@ class CourseController extends Controller
         // Find The Number Of Users Enrolled In The Course
         $userCount = $course->enrollments()->count();
 
+        // Find The Users Enrolled In The Course
+        $EnrolledUsers = $course->users;
+
         // Add user_courses and userCount as an element of the $user variable
         $user->setAttribute('user_courses', $user_courses);
         $user->setAttribute('userCount', $userCount);
@@ -108,6 +111,7 @@ class CourseController extends Controller
                 'description' => $description,
                 'teachingMethods' => $course->teachingmethods,
                 "category_name" => $category->name,
+                "EnrolledUsers" => $EnrolledUsers,
                 'breadcrumbs' => [
                     ['label' => 'Home', 'url' => '/'],
                     ['label' => 'Courses', 'url' => '/courses'],

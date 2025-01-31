@@ -46,6 +46,9 @@ const CourseCard = ({ course }) => {
     const previewRef = useRef(null);
     const { auth } = usePage().props;
 
+    // Check if the user is enrolled in the course
+    const isEnrolled = auth.user && course.users.some(user => user.id === auth.user.id);
+
     const handleShare = (e) => {
         e.preventDefault();
         setShowShareTooltip(true);
@@ -113,7 +116,6 @@ const CourseCard = ({ course }) => {
         if (!auth.user) {
             setIsBookmarked(!isBookmarked);
         } else {
-
             if (isBookmarked) {
                 // Unbookmark the course
                 router.post(route('courses.unbookmark', course.id), {}, {
@@ -256,54 +258,57 @@ const CourseCard = ({ course }) => {
                                 <span className="text-sm">{course.students}</span>
                             </div>
                         </div>
-                        {auth.user.id === course.id ? (
-                            // If the user has the course, show the Dashboard button
+
+
+                        {/* Price/Checkout Section */}
+                        {isEnrolled ? (
+                            // If the user is enrolled, show the "Go To Dashboard" button
                             <div
                                 className="
-                                px-6 py-2 rounded-full text-lg font-bold text-center
-                                bg-gradient-to-r from-purple-500 to-purple-700 text-white"
+                                    px-6 py-2 rounded-full text-lg font-bold text-center
+                                    bg-gradient-to-r from-purple-500 to-purple-700 text-white
+                                    transform transition-all duration-300 hover:scale-105
+                                "
                             >
-                                <a href="/dashboard">Go To Dashboard</a>
+                                <Link href="/dashboard" className="w-full block">
+                                    Go To Dashboard
+                                </Link>
                             </div>
                         ) : (
-                            // If the user doesn't have the course, show price or checkout button
+                            // If the user is not enrolled, show the price/checkout button
                             <div
                                 className={`
-                                px-6 py-2 rounded-full text-lg font-bold text-center
-                                ${course.price === 0
+                                    relative px-6 py-2 rounded-full text-lg font-bold text-center overflow-hidden
+                                    transition-all duration-300 transform
+                                    ${course.price == 0
                                         ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white"
                                         : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
                                     }
+                                    group-hover:scale-105
                                 `}
                             >
-                                {course.price === 0 ? (
-                                    "Free!"
-                                ) : (
-                                    <CheckoutButton
-                                        courseId={course.id}
-                                        courseName={course.title}
-                                        coursePrice={course.price}
-                                        styles="w-full"
-                                        text={`$${course.price}`}
-                                    />
-                                )}
+                                {/* Price Text */}
+                                <div className="relative z-10 transition-transform duration-300 group-hover:translate-x-[-100%]">
+                                    {course.price == 0 ? "Free!" : `$${course.price}`}
+                                </div>
+
+                                {/* "Enroll Now" or "Buy Now!" Text */}
+                                <div className="absolute inset-0 flex items-center justify-center transition-transform duration-300 transform translate-x-[100%] group-hover:translate-x-0">
+                                    {course.price == 0 ? "Enroll Now" : "Buy Now!"}
+                                </div>
                             </div>
                         )}
-
-
                     </div>
                 </div>
-            </Link >
+            </Link>
 
             {/* Preview Section */}
-            {
-                showPreview && (
-                    usePortal
-                        ? createPortal(<PreviewContent />, document.body)
-                        : <PreviewContent />
-                )
-            }
-        </div >
+            {showPreview && (
+                usePortal
+                    ? createPortal(<PreviewContent />, document.body)
+                    : <PreviewContent />
+            )}
+        </div>
     );
 };
 
