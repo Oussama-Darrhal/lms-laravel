@@ -256,31 +256,54 @@ const CourseCard = ({ course }) => {
                                 <span className="text-sm">{course.students}</span>
                             </div>
                         </div>
-
-                        <div
-                            className={`
+                        {auth.user.id === course.id ? (
+                            // If the user has the course, show the Dashboard button
+                            <div
+                                className="
                                 px-6 py-2 rounded-full text-lg font-bold text-center
-                                ${course.price == 0
-                                    ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white"
-                                    : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
-                                }
-                            `}
-                        >
-                            <CheckoutButton
-                                text={course.price == 0 ? "Free!" : `$${course.price}`}
-                            />
-                        </div>
+                                bg-gradient-to-r from-purple-500 to-purple-700 text-white"
+                            >
+                                <a href="/dashboard">Go To Dashboard</a>
+                            </div>
+                        ) : (
+                            // If the user doesn't have the course, show price or checkout button
+                            <div
+                                className={`
+                                px-6 py-2 rounded-full text-lg font-bold text-center
+                                ${course.price === 0
+                                        ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white"
+                                        : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                                    }
+                                `}
+                            >
+                                {course.price === 0 ? (
+                                    "Free!"
+                                ) : (
+                                    <CheckoutButton
+                                        courseId={course.id}
+                                        courseName={course.title}
+                                        coursePrice={course.price}
+                                        styles="w-full"
+                                        text={`$${course.price}`}
+                                    />
+                                )}
+                            </div>
+                        )}
+
+
                     </div>
                 </div>
-            </Link>
+            </Link >
 
             {/* Preview Section */}
-            {showPreview && (
-                usePortal
-                    ? createPortal(<PreviewContent />, document.body)
-                    : <PreviewContent />
-            )}
-        </div>
+            {
+                showPreview && (
+                    usePortal
+                        ? createPortal(<PreviewContent />, document.body)
+                        : <PreviewContent />
+                )
+            }
+        </div >
     );
 };
 

@@ -18,7 +18,8 @@ class CourseController extends Controller
         $search = $request->query('search');
         $category = $request->query('category');
 
-        $query = Course::query();
+        // Start the query for courses
+        $query = Course::with('users:id,name,email'); // Eager load users with selected fields
 
         // If there's a category selected, filter courses by category first
         if ($category) {
@@ -36,7 +37,7 @@ class CourseController extends Controller
         // Get the filtered courses
         $courses = $query->get();
 
-        // Retrieve all categories to be passed to the view
+        // Retrieve all categories
         $categories = Category::all();
 
         // Return the view with the courses and categories data
@@ -51,6 +52,7 @@ class CourseController extends Controller
             'category' => $category,  // Pass selected category to the view for re-populating the category filter
         ]);
     }
+
 
     // Display a success page for enrolling in a course
     public function enrolled($id)
