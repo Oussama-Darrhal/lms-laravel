@@ -89,68 +89,68 @@ const itemVariants = {
     }
 };
 
-    const courses = [
-        {
-            id: 1,
-            title: "Web Programming Basics",
-            description: "Fundamentals of web development and design",
-            progress: 20,
-            status: "Continue",
-            image: "/api/placeholder/80/60",
-            nextLesson: {
-                title: "Introduction to HTML5",
-                duration: "12 mins"
-            },
-            timeEstimation: "2 weeks remaining",
-            lastAccessed: "2 hours ago",
-            version: "2.1.5"
+const courses = [
+    {
+        id: 1,
+        title: "Web Programming Basics",
+        description: "Fundamentals of web development and design",
+        progress: 20,
+        status: "Continue",
+        image: "/api/placeholder/80/60",
+        nextLesson: {
+            title: "Introduction to HTML5",
+            duration: "12 mins"
         },
-        {
-            id: 2,
-            title: "Digital Marketing 101",
-            description: "Introduction to marketing strategies and concepts",
-            progress: 100,
-            status: "Certificate",
-            image: "/api/placeholder/80/60",
-            nextLesson: {
-                title: "Course Completed",
-                duration: ""
-            },
-            timeEstimation: "Fully completed",
-            lastAccessed: "5 days ago",
-            version: "1.4.2"
+        timeEstimation: "2 weeks remaining",
+        lastAccessed: "2 hours ago",
+        version: "2.1.5"
+    },
+    {
+        id: 2,
+        title: "Digital Marketing 101",
+        description: "Introduction to marketing strategies and concepts",
+        progress: 100,
+        status: "Certificate",
+        image: "/api/placeholder/80/60",
+        nextLesson: {
+            title: "Course Completed",
+            duration: ""
         },
-        {
-            id: 3,
-            title: "Data Science Fundamentals",
-            description: "Learn the basics of data science and analytics",
-            progress: 50,
-            status: "Continue",
-            image: "/api/placeholder/80/60",
-            nextLesson: {
-                title: "Python for Data Analysis",
-                duration: "18 mins"
-            },
-            timeEstimation: "3 weeks remaining",
-            lastAccessed: "1 day ago",
-            version: "3.0.0"
+        timeEstimation: "Fully completed",
+        lastAccessed: "5 days ago",
+        version: "1.4.2"
+    },
+    {
+        id: 3,
+        title: "Data Science Fundamentals",
+        description: "Learn the basics of data science and analytics",
+        progress: 50,
+        status: "Continue",
+        image: "/api/placeholder/80/60",
+        nextLesson: {
+            title: "Python for Data Analysis",
+            duration: "18 mins"
         },
-        {
-            id: 4,
-            title: "UI/UX Design for Beginners",
-            description: "Master the principles of user interface and experience design",
-            progress: 90,
-            status: "Continue",
-            image: "/api/placeholder/80/60",
-            nextLesson: {
-                title: "Figma Basics",
-                duration: "15 mins"
-            },
-            timeEstimation: "4 days remaining",
-            lastAccessed: "3 hours ago",
-            version: "2.6.1"
-        }
-    ];
+        timeEstimation: "3 weeks remaining",
+        lastAccessed: "1 day ago",
+        version: "3.0.0"
+    },
+    {
+        id: 4,
+        title: "UI/UX Design for Beginners",
+        description: "Master the principles of user interface and experience design",
+        progress: 90,
+        status: "Continue",
+        image: "/api/placeholder/80/60",
+        nextLesson: {
+            title: "Figma Basics",
+            duration: "15 mins"
+        },
+        timeEstimation: "4 days remaining",
+        lastAccessed: "3 hours ago",
+        version: "2.6.1"
+    }
+];
 const ActivityList = () => {
 
     return (
@@ -287,8 +287,8 @@ const ActivityList = () => {
                                 <div className="col-span-2 md:pl-4">
                                     <button
                                         className={`w-full md:w-auto flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md transition-all duration-200 border ${course.status === "Certificate"
-                                                ? 'bg-white text-[#1a1b41] border-[#1a1b41] hover:bg-[#1a1b41]/5'
-                                                : 'bg-[#1a1b41] text-white hover:bg-[#2d2e6f] border-transparent'
+                                            ? 'bg-white text-[#1a1b41] border-[#1a1b41] hover:bg-[#1a1b41]/5'
+                                            : 'bg-[#1a1b41] text-white hover:bg-[#2d2e6f] border-transparent'
                                             }`}
                                     >
                                         {course.status === "Certificate" && (
@@ -470,7 +470,7 @@ const CustomTooltip = ({ active, payload }) => {
 
 const Overview = () => {
     return (
-        <div className="bg-white rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
+        <div className="flex flex-col bg-white rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
             <div className="p-6 border-b border-gray-100">
                 <div className="flex justify-between items-center">
                     <div>
@@ -522,7 +522,7 @@ const Dashboard = () => {
     const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
 
     return (
-        <div className="flex min-h-screen bg-gray-50">
+        <div className=" min-h-screen bg-gray-50 flex">
             <Head title='Dashboard' />
             <Sidebar
                 width={sidebarWidth}
@@ -537,6 +537,7 @@ const Dashboard = () => {
                 className="flex-1 min-h-screen transition-all duration-200"
                 style={{ marginLeft: `${sidebarWidth}px` }}
             >
+                {/* navbar */}
                 <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100">
                     <div className="px-6 py-3 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
@@ -588,11 +589,11 @@ const Dashboard = () => {
                             </div>
                         </div>
 
-                        <div className="col-span-8">
+                        <div className="col-span-12 lg:col-span-8">
                             <Overview />
                         </div>
 
-                        <div className="col-span-4">
+                        <div className="col-span-12 lg:col-span-4">
                             <StatisticsCard />
                         </div>
 
