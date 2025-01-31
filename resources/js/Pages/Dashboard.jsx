@@ -89,68 +89,68 @@ const itemVariants = {
     }
 };
 
-const courses = [
-    {
-        id: 1,
-        title: "Web Programming Basics",
-        description: "Fundamentals of web development and design",
-        progress: 20,
-        status: "Continue",
-        image: "/api/placeholder/80/60",
-        nextLesson: {
-            title: "Introduction to HTML5",
-            duration: "12 mins"
+    const courses = [
+        {
+            id: 1,
+            title: "Web Programming Basics",
+            description: "Fundamentals of web development and design",
+            progress: 20,
+            status: "Continue",
+            image: "/api/placeholder/80/60",
+            nextLesson: {
+                title: "Introduction to HTML5",
+                duration: "12 mins"
+            },
+            timeEstimation: "2 weeks remaining",
+            lastAccessed: "2 hours ago",
+            version: "2.1.5"
         },
-        timeEstimation: "2 weeks remaining",
-        lastAccessed: "2 hours ago",
-        version: "2.1.5"
-    },
-    {
-        id: 2,
-        title: "Digital Marketing 101",
-        description: "Introduction to marketing strategies and concepts",
-        progress: 100,
-        status: "Certificate",
-        image: "/api/placeholder/80/60",
-        nextLesson: {
-            title: "Course Completed",
-            duration: ""
+        {
+            id: 2,
+            title: "Digital Marketing 101",
+            description: "Introduction to marketing strategies and concepts",
+            progress: 100,
+            status: "Certificate",
+            image: "/api/placeholder/80/60",
+            nextLesson: {
+                title: "Course Completed",
+                duration: ""
+            },
+            timeEstimation: "Fully completed",
+            lastAccessed: "5 days ago",
+            version: "1.4.2"
         },
-        timeEstimation: "Fully completed",
-        lastAccessed: "5 days ago",
-        version: "1.4.2"
-    },
-    {
-        id: 3,
-        title: "Data Science Fundamentals",
-        description: "Learn the basics of data science and analytics",
-        progress: 50,
-        status: "Continue",
-        image: "/api/placeholder/80/60",
-        nextLesson: {
-            title: "Python for Data Analysis",
-            duration: "18 mins"
+        {
+            id: 3,
+            title: "Data Science Fundamentals",
+            description: "Learn the basics of data science and analytics",
+            progress: 50,
+            status: "Continue",
+            image: "/api/placeholder/80/60",
+            nextLesson: {
+                title: "Python for Data Analysis",
+                duration: "18 mins"
+            },
+            timeEstimation: "3 weeks remaining",
+            lastAccessed: "1 day ago",
+            version: "3.0.0"
         },
-        timeEstimation: "3 weeks remaining",
-        lastAccessed: "1 day ago",
-        version: "3.0.0"
-    },
-    {
-        id: 4,
-        title: "UI/UX Design for Beginners",
-        description: "Master the principles of user interface and experience design",
-        progress: 90,
-        status: "Continue",
-        image: "/api/placeholder/80/60",
-        nextLesson: {
-            title: "Figma Basics",
-            duration: "15 mins"
-        },
-        timeEstimation: "4 days remaining",
-        lastAccessed: "3 hours ago",
-        version: "2.6.1"
-    }
-];
+        {
+            id: 4,
+            title: "UI/UX Design for Beginners",
+            description: "Master the principles of user interface and experience design",
+            progress: 90,
+            status: "Continue",
+            image: "/api/placeholder/80/60",
+            nextLesson: {
+                title: "Figma Basics",
+                duration: "15 mins"
+            },
+            timeEstimation: "4 days remaining",
+            lastAccessed: "3 hours ago",
+            version: "2.6.1"
+        }
+    ];
 const ActivityList = () => {
 
     return (
@@ -287,8 +287,8 @@ const ActivityList = () => {
                                 <div className="col-span-2 md:pl-4">
                                     <button
                                         className={`w-full md:w-auto flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md transition-all duration-200 border ${course.status === "Certificate"
-                                            ? 'bg-white text-[#1a1b41] border-[#1a1b41] hover:bg-[#1a1b41]/5'
-                                            : 'bg-[#1a1b41] text-white hover:bg-[#2d2e6f] border-transparent'
+                                                ? 'bg-white text-[#1a1b41] border-[#1a1b41] hover:bg-[#1a1b41]/5'
+                                                : 'bg-[#1a1b41] text-white hover:bg-[#2d2e6f] border-transparent'
                                             }`}
                                     >
                                         {course.status === "Certificate" && (
