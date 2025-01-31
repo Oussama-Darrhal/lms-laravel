@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Breadcrumbs from "@/Components/BreadCrumbs";
 import Navbar from "@/Components/NavBar";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import Footer from "@/Components/Footer";
 import {
     User,
@@ -425,6 +425,9 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
     const [activeTab, setActiveTab] = useState("Description");
     const { auth } = usePage().props;
 
+    // Check if the user is enrolled in the course
+    const isEnrolled = EnrolledUsers.some(user => user.id === auth.user.id);
+
     const tabs = [
         "Description",
         "Instructor",
@@ -512,7 +515,7 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
             </main>
 
             {/* Section Before Footer */}
-            <section className="bg-[#eef5fb] py-16 text-center px-4 sm:px-8">
+            <section className="bg-[#eef5fb] py-16 text-center px-4 sm:px-8 flex items-center flex-col">
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4">
                     Ready to Take the Next Step?
                 </h2>
@@ -522,15 +525,31 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
                     topic, we’re here to help you continue your journey.
                 </p>
 
-                {console.log(EnrolledUsers)}
+                {isEnrolled ? (
+                    // If the user is enrolled, show the "Go To Dashboard" button
+                    <div
+                        className="
+                            px-6 py-2 rounded-full text-lg font-bold text-center
+                            bg-gradient-to-r from-purple-500 to-purple-700 text-white
+                            transform transition-all duration-300 hover:scale-105
+                            w-fit
+                        "
+                    >
+                        <Link href="/dashboard" className="w-full block">
+                            Go To Dashboard
+                        </Link>
+                    </div>
+                ) : (
+                    // If the user is not enrolled, show the checkout button
+                    <CheckoutButton
+                        courseId={course.id}
+                        courseName={course.titre}
+                        coursePrice={course.price}
+                        text={"Join the Course"}
+                        styles="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
+                    />
+                )}
 
-                <CheckoutButton
-                    courseId={course.id}
-                    courseName={course.titre}
-                    coursePrice={course.price}
-                    text={"Join the Course"}
-                    styles="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
-                />
             </section>
 
             <Footer />
