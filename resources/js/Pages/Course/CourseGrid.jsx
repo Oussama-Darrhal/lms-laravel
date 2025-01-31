@@ -1,3 +1,4 @@
+import CheckoutButton from "@/Components/CheckoutButton";
 import { Link, router, usePage } from "@inertiajs/react";
 import { Clock, Video, Users, Heart, Share2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
@@ -44,8 +45,6 @@ const CourseCard = ({ course }) => {
     const cardRef = useRef(null);
     const previewRef = useRef(null);
     const { auth } = usePage().props;
-
-
 
     const handleShare = (e) => {
         e.preventDefault();
@@ -257,6 +256,7 @@ const CourseCard = ({ course }) => {
                                 <span className="text-sm">{course.students}</span>
                             </div>
                         </div>
+
                         <div
                             className={`
                                 px-6 py-2 rounded-full text-lg font-bold text-center
@@ -266,7 +266,9 @@ const CourseCard = ({ course }) => {
                                 }
                             `}
                         >
-                            {course.price == 0 ? "Free!" : `$${course.price}`}
+                            <CheckoutButton
+                                text={course.price == 0 ? "Free!" : `$${course.price}`}
+                            />
                         </div>
                     </div>
                 </div>

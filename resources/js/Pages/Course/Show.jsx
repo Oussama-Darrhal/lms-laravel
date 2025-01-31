@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import * as Icons from 'lucide-react'; // Import all Lucide icons
 import axios from "axios";
+import CheckoutButton from "@/Components/CheckoutButton";
 
 const TabButton = ({ active, onClick, children }) => (
     <button
@@ -520,12 +521,22 @@ export default function Show({ course, breadcrumbs, testimonials, teachingMethod
                     looking to sharpen your skills or dive deeper into the
                     topic, we’re here to help you continue your journey.
                 </p>
-                <button
+                {/* <button
                     onClick={() => (window.location.href = "/courses/" + course.id + "/enrolled")}
-                    className="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
+
                 >
-                    Join the Course
-                </button>
+
+                </button> */}
+
+                {console.log(course.price)}
+
+                <CheckoutButton
+                    courseId={course.id}
+                    courseName={course.titre}
+                    coursePrice={course.price}
+                    text={"Join the Course"}
+                    styles="bg-[#fdd981] text-black py-3 px-6 sm:px-10 rounded-full text-base sm:text-xl font-semibold hover:bg-[#fbd46d] focus:outline-none focus:ring-4 focus:ring-[#fdd981] transition-all duration-300"
+                />
             </section>
 
             <Footer />

@@ -52,7 +52,6 @@ class CourseController extends Controller
         ]);
     }
 
-
     // Display a success page for enrolling in a course
     public function enrolled($id)
     {

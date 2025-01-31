@@ -30,6 +30,8 @@ Route::post('/courses/{course}/bookmark', [CourseController::class, 'bookmark'])
 Route::post('/courses/{course}/unbookmark', [CourseController::class, 'unbookmark'])->name('courses.unbookmark');
 
 Route::post('/create-checkout-session', [StripeController::class, 'createCheckoutSession']);
+Route::get('/payment/{id}/success', [StripeController::class, 'success'])->name('payment.success');
+Route::get('/payment/{id}/cancel', [StripeController::class, 'cancel'])->name('payment.cancel');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
