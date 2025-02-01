@@ -12,7 +12,8 @@ const SIDEBAR = {
     DEFAULT_WIDTH: 240
 };
 
-const StatisticsCard = () => {
+const StatisticsCard = ({ overallProgress }) => {
+
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
             <div className="p-4 sm:p-6 border-b border-gray-100">
@@ -36,7 +37,7 @@ const StatisticsCard = () => {
                             className="text-[#1a1b41] transition-all duration-1000 ease-in-out"
                             strokeWidth="8"
                             strokeDasharray={`${2 * Math.PI * 45}%`}
-                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - 0.65)}%`}
+                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - overallProgress * 0.01)}%`}
                             strokeLinecap="round"
                             stroke="currentColor"
                             fill="transparent"
@@ -46,7 +47,7 @@ const StatisticsCard = () => {
                         />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-2xl sm:text-3xl font-bold text-gray-800">65%</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-gray-800">{overallProgress}%</span>
                         <span className="text-gray-500 text-xs sm:text-sm mt-1">Completion Rate</span>
                     </div>
                 </div>
@@ -659,7 +660,7 @@ function Navbar() {
     );
 }
 
-const Dashboard = () => {
+const Dashboard = ({ overallProgress }) => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.COLLAPSED_WIDTH);
     const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
@@ -705,7 +706,7 @@ const Dashboard = () => {
 
                         {/* Statistics Card - Full width on mobile, 4 cols on lg */}
                         <div className="col-span-1 sm:col-span-12 lg:col-span-4">
-                            <StatisticsCard />
+                            <StatisticsCard overallProgress={overallProgress}/>
                         </div>
 
                         {/* Activity List - Always full width */}
