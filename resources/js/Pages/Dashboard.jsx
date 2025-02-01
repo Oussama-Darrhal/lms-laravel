@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import { Bell, Search, ChevronDown, LayoutDashboard, BookOpen, Calendar, Settings, HelpCircle, Trophy, Menu, X, Clock } from 'lucide-react';
 import React, { useState, useEffect, useCallback } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
+import { LogOut, User } from "lucide-react";
 
 const SIDEBAR = {
     COLLAPSED_WIDTH: 84,
@@ -446,7 +447,7 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
                         }`}>
                         {(!isCollapsed || (isMobile && showMobileMenu)) && (
                             <h1 className="hidden lg:block text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200">
-                                EDUFREE
+                                INSTRUCTLY
                             </h1>
                         )}
                         <button
@@ -535,12 +536,8 @@ const Overview = () => {
                 <div className="flex justify-between items-center">
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">Overview</h2>
-                        <p className="text-gray-500 text-sm mt-1">Completed Videos (Daily)</p>
+                        <p className="text-gray-500 text-sm mt-1">Completed Videos (Weekly)</p>
                     </div>
-                    <button className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors border border-gray-200">
-                        <span className="text-gray-700 text-sm">Category</span>
-                        <ChevronDown size={16} className="text-gray-500" />
-                    </button>
                 </div>
             </div>
             <div className="p-6">
@@ -576,6 +573,72 @@ const Overview = () => {
     );
 };
 
+function Navbar() {
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    return (
+        <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
+            <div className="px-6 py-3 flex items-center justify-between">
+                <h1 className="text-lg font-semibold text-gray-800">INSTRUCTLY</h1>
+
+                <div className="relative">
+                    <div
+                        className="flex items-center space-x-2 cursor-pointer group"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                    >
+                        {/* Arrow Icon with Animation */}
+                        <motion.div
+                            animate={{ rotate: menuOpen ? 180 : 0 }}
+                            whileHover={{ rotate: -15 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <ChevronDown className="w-5 h-5 text-gray-600" />
+                        </motion.div>
+
+                        <div className="relative">
+                            <img
+                                src="images/pfp-1.jpg"
+                                alt="Profile"
+                                className="w-10 h-10 rounded-full border-2 border-white shadow-md group-hover:scale-105 transition duration-300"
+                            />
+                            <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border border-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-base font-semibold text-gray-800">Hi, Dimos</h1>
+                            <p className="text-gray-500 text-sm">Frontend Developer</p>
+                        </div>
+                    </div>
+
+                    {/* Dropdown */}
+                    <AnimatePresence>
+                        {menuOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.2 }}
+                                className="absolute right-0 mt-3 w-48 bg-white border border-gray-200 rounded-lg shadow-lg"
+                            >
+                                <ul className="py-2 text-gray-700">
+                                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer">
+                                        <User className="w-5 h-5 mr-2 text-gray-600" /> Profile
+                                    </li>
+                                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer">
+                                        <BookOpen className="w-5 h-5 mr-2 text-gray-600" /> Courses
+                                    </li>
+                                    <li className="flex items-center px-4 py-2 hover:bg-red-100 text-red-500 transition duration-200 cursor-pointer">
+                                        <LogOut className="w-5 h-5 mr-2 text-red-500" /> Sign Out
+                                    </li>
+                                </ul>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+        </header>
+    );
+}
+
 const Dashboard = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.COLLAPSED_WIDTH);
@@ -599,24 +662,7 @@ const Dashboard = () => {
                 style={{ marginLeft: `${isMobile ? 0 : 90}px` }}
             >
                 {/* navbar */}
-                <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100">
-                    <div className="px-6 py-3 flex items-center">
-                        <div className="flex items-center space-x-3">
-                            <div className="relative">
-                                <img
-                                    src="/api/placeholder/48/48"
-                                    alt="Profile"
-                                    className="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-                                />
-                                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border border-white" />
-                            </div>
-                            <div>
-                                <h1 className="text-base font-semibold text-gray-800">Hi, Dimos</h1>
-                                <p className="text-gray-500 text-sm">Frontend Developer</p>
-                            </div>
-                        </div>
-                    </div>
-                </header>
+                <Navbar />
 
                 <main className="p-4 sm:p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-5">
