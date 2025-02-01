@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Bell, Search, ChevronDown, LayoutDashboard, BookOpen, Calendar, Settings, HelpCircle, Trophy, Menu, X, Clock } from 'lucide-react';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
 import { LogOut, User } from "lucide-react";
 
@@ -575,13 +575,33 @@ const Overview = () => {
 
 function Navbar() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const dropdownRef = useRef(null);
+    const { auth } = usePage().props;
+
+    console.log(auth.user);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setMenuOpen(false);
+            }
+        };
+
+        // Add event listener when the component mounts
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Clean up the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
             <div className="px-6 py-3 flex items-center justify-between">
                 <h1 className="text-lg font-semibold text-gray-800">INSTRUCTLY</h1>
 
-                <div className="relative">
+                <div className="relative" ref={dropdownRef}>
                     <div
                         className="flex items-center space-x-2 cursor-pointer group"
                         onClick={() => setMenuOpen(!menuOpen)}
@@ -597,15 +617,15 @@ function Navbar() {
 
                         <div className="relative">
                             <img
-                                src="images/pfp-1.jpg"
+                                src={auth.user.profile_picture}
                                 alt="Profile"
                                 className="w-10 h-10 rounded-full border-2 border-white shadow-md group-hover:scale-105 transition duration-300"
                             />
                             <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border border-white" />
                         </div>
                         <div>
-                            <h1 className="text-base font-semibold text-gray-800">Hi, Dimos</h1>
-                            <p className="text-gray-500 text-sm">Frontend Developer</p>
+                            <h1 className="text-base font-semibold text-gray-800">Hi, {auth.user.name}</h1>
+                            <p className="text-gray-500 text-sm capitalize">{auth.user.role}</p>
                         </div>
                     </div>
 
@@ -644,6 +664,7 @@ const Dashboard = () => {
     const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.COLLAPSED_WIDTH);
     const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+    const { auth } = usePage().props;
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
@@ -669,7 +690,7 @@ const Dashboard = () => {
                         {/* Welcome Card - Full width on all screens */}
                         <div className="col-span-1 sm:col-span-12">
                             <div className="bg-gradient-to-r from-[#1a1b41] to-[#2d2e6f] rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
-                                <h2 className="text-lg sm:text-xl font-semibold mb-2">Welcome back, Dimas! 👋</h2>
+                                <h2 className="text-lg sm:text-xl font-semibold mb-2">Welcome back, {auth.user.name} 👋</h2>
                                 <p className="text-white/85 text-xs sm:text-sm max-w-2xl leading-relaxed">
                                     Track your learning progress, continue where you left off, and achieve your goals.
                                     You've completed 65% of your weekly learning objectives.
