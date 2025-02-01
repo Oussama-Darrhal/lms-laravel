@@ -434,9 +434,9 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
             <MobileMenu />
             <div
                 className={`fixed z-50 transition-all duration-300 ${isMobile
-                        ? `bottom-6 left-6 ${showMobileMenu ? 'w-64 h-auto rounded-2xl' : 'w-14 h-14 rounded-full'
-                        }`
-                        : 'left-0 top-0 h-screen'
+                    ? `bottom-6 left-6 ${showMobileMenu ? 'w-64 h-auto rounded-2xl' : 'w-14 h-14 rounded-full'
+                    }`
+                    : 'left-0 top-0 h-screen'
                     }`}
                 style={!isMobile ? { width: `${currentWidth}px` } : undefined}
             >
@@ -452,8 +452,8 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
                         <button
                             onClick={handleToggleCollapse}
                             className={`text-white transition-colors ${isMobile && !showMobileMenu
-                                    ? 'w-14 h-14 flex items-center justify-center hover:bg-white/10 rounded-full'
-                                    : 'p-2 rounded-lg hover:bg-white/10'
+                                ? 'w-14 h-14 flex items-center justify-center hover:bg-white/10 rounded-full'
+                                : 'p-2 rounded-lg hover:bg-white/10'
                                 }`}
                         >
                             {isCollapsed || (isMobile && !showMobileMenu) ? (
@@ -480,8 +480,8 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
                                         if (isMobile) setShowMobileMenu(false);
                                     }}
                                     className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl ${activeItem === item.id
-                                            ? 'bg-white/20 backdrop-blur-sm shadow-inner'
-                                            : 'hover:bg-white/10'
+                                        ? 'bg-white/20 backdrop-blur-sm shadow-inner'
+                                        : 'hover:bg-white/10'
                                         }`}
                                 >
                                     <item.icon size={20} className="flex-shrink-0" />
@@ -494,7 +494,6 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
                     {!isMobile && (
                         <div
                             className="absolute right-0 top-0 w-2 h-full cursor-ew-resize hover:bg-white/20 active:bg-white/30"
-                            onMouseDown={startResizing}
                         />
                     )}
                 </div>
@@ -578,8 +577,8 @@ const Overview = () => {
 };
 
 const Dashboard = () => {
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.DEFAULT_WIDTH);
+    const [isCollapsed, setIsCollapsed] = useState(true);
+    const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.COLLAPSED_WIDTH);
     const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
@@ -597,11 +596,11 @@ const Dashboard = () => {
 
             <div
                 className="flex-1 min-h-screen transition-all duration-200"
-                style={{ marginLeft: `${isMobile ? 84 : sidebarWidth}px` }}
+                style={{ marginLeft: `${isMobile ? 0 : 90}px` }}
             >
                 {/* navbar */}
                 <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100">
-                    <div className="px-6 py-3 flex items-center justify-between">
+                    <div className="px-6 py-3 flex items-center">
                         <div className="flex items-center space-x-3">
                             <div className="relative">
                                 <img
@@ -612,29 +611,9 @@ const Dashboard = () => {
                                 <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border border-white" />
                             </div>
                             <div>
-                                <div className="flex items-center space-x-2">
-                                    <h1 className="text-base font-semibold text-gray-800">Welcome, Dimas</h1>
-                                    <span className="px-2 py-1 bg-[#1a1b41]/10 rounded-md text-xs font-medium text-[#1a1b41]">
-                                        Pro Member
-                                    </span>
-                                </div>
+                                <h1 className="text-base font-semibold text-gray-800">Hi, Dimos</h1>
                                 <p className="text-gray-500 text-sm">Frontend Developer</p>
                             </div>
-                        </div>
-
-                        <div className="flex items-center space-x-4">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                                <input
-                                    type="text"
-                                    placeholder="Search dashboard..."
-                                    className="text-sm pl-10 pr-4 py-2 w-60 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[#1a1b41]/10 focus:border-[#1a1b41] outline-none transition-all"
-                                />
-                            </div>
-                            <button className="p-2 rounded-lg hover:bg-gray-100 relative">
-                                <Bell size={20} className="text-gray-600" />
-                                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
-                            </button>
                         </div>
                     </div>
                 </header>
