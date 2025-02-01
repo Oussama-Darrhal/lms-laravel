@@ -14,12 +14,12 @@ const SIDEBAR = {
 const StatisticsCard = () => {
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
-            <div className="p-6 border-b border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-800">Learning Progress</h2>
-                <p className="text-gray-500 text-sm mt-1">Videos Watched</p>
+            <div className="p-4 sm:p-6 border-b border-gray-100">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Learning Progress</h2>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1">Videos Watched</p>
             </div>
-            <div className="p-6">
-                <div className="relative w-56 h-56 mx-auto">
+            <div className="p-4 sm:p-6">
+                <div className="relative w-full max-w-[14rem] mx-auto aspect-square">
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-gray-50 rounded-full" />
                     <svg className="w-full h-full transform -rotate-90">
                         <circle
@@ -27,33 +27,32 @@ const StatisticsCard = () => {
                             strokeWidth="8"
                             stroke="currentColor"
                             fill="transparent"
-                            r="90"
-                            cx="112"
-                            cy="112"
+                            r="45%"
+                            cx="50%"
+                            cy="50%"
                         />
                         <circle
                             className="text-[#1a1b41] transition-all duration-1000 ease-in-out"
                             strokeWidth="8"
-                            strokeDasharray={`${2 * Math.PI * 90}`}
-                            strokeDashoffset={`${2 * Math.PI * 90 * (1 - 0.65)}`}
+                            strokeDasharray={`${2 * Math.PI * 45}%`}
+                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - 0.65)}%`}
                             strokeLinecap="round"
                             stroke="currentColor"
                             fill="transparent"
-                            r="90"
-                            cx="112"
-                            cy="112"
+                            r="45%"
+                            cx="50%"
+                            cy="50%"
                         />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-3xl font-bold text-gray-800">65%</span>
-                        <span className="text-gray-500 text-sm mt-1">Completion Rate</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-gray-800">65%</span>
+                        <span className="text-gray-500 text-xs sm:text-sm mt-1">Completion Rate</span>
                     </div>
                 </div>
             </div>
         </div>
     );
 };
-
 
 const previewVariants = {
     hidden: { opacity: 0, x: -16 },
@@ -339,39 +338,67 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
     const [activeItem, setActiveItem] = useState('dashboard');
     const [isResizing, setIsResizing] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(width);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+    const [showMobileMenu, setShowMobileMenu] = useState(false);
 
     const startResizing = useCallback((e) => {
-        e.preventDefault();
-        setIsResizing(true);
-    }, []);
+        if (!isMobile) {
+            e.preventDefault();
+            setIsResizing(true);
+        }
+    }, [isMobile]);
 
     const resize = useCallback((e) => {
-        if (isResizing) {
+        if (isResizing && !isMobile) {
             const newWidth = Math.min(
                 Math.max(e.clientX, SIDEBAR.MIN_WIDTH),
                 SIDEBAR.MAX_WIDTH
             );
             setCurrentWidth(newWidth);
         }
-    }, [isResizing]);
+    }, [isResizing, isMobile]);
 
     const stopResizing = useCallback(() => {
-        setIsResizing(false);
-        setWidth(currentWidth);
-    }, [setWidth, currentWidth]);
+        if (!isMobile) {
+            setIsResizing(false);
+            setWidth(currentWidth);
+        }
+    }, [setWidth, currentWidth, isMobile]);
 
     const handleToggleCollapse = () => {
-        if (isCollapsed) {
-            setWidth(lastWidthBeforeCollapse);
-            setCurrentWidth(lastWidthBeforeCollapse);
-            setIsCollapsed(false);
+        if (isMobile) {
+            setShowMobileMenu(!showMobileMenu);
         } else {
-            setLastWidthBeforeCollapse(width);
-            setWidth(SIDEBAR.COLLAPSED_WIDTH);
-            setCurrentWidth(SIDEBAR.COLLAPSED_WIDTH);
-            setIsCollapsed(true);
+            if (isCollapsed) {
+                setWidth(lastWidthBeforeCollapse);
+                setCurrentWidth(lastWidthBeforeCollapse);
+                setIsCollapsed(false);
+            } else {
+                setLastWidthBeforeCollapse(width);
+                setWidth(SIDEBAR.COLLAPSED_WIDTH);
+                setCurrentWidth(SIDEBAR.COLLAPSED_WIDTH);
+                setIsCollapsed(true);
+            }
         }
     };
+
+    useEffect(() => {
+        const handleResize = () => {
+            const newIsMobile = window.innerWidth < 1024;
+            setIsMobile(newIsMobile);
+            if (newIsMobile) {
+                setIsCollapsed(true);
+                setWidth(SIDEBAR.COLLAPSED_WIDTH);
+                setShowMobileMenu(false);
+            } else {
+                setIsCollapsed(false);
+                setWidth(lastWidthBeforeCollapse);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [setIsCollapsed, setWidth, lastWidthBeforeCollapse]);
 
     useEffect(() => {
         if (isResizing) {
@@ -393,52 +420,86 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
         setCurrentWidth(width);
     }, [width]);
 
-    return (
+    // Mobile menu overlay
+    const MobileMenu = () => (
         <div
-            className="fixed left-0 top-0 h-screen bg-gradient-to-b from-[#1a1b41] to-[#2d2e6f] text-white z-50"
-            style={{ width: `${currentWidth}px` }}
-        >
-            <div className="p-6 flex items-center justify-between h-16">
-                {!isCollapsed && (
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200">
-                        EDUFREE
-                    </h1>
-                )}
-                <button
-                    onClick={handleToggleCollapse}
-                    className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-                >
-                    {isCollapsed ? <Menu size={20} /> : <X size={20} />}
-                </button>
-            </div>
+            className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity z-40 ${showMobileMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                }`}
+            onClick={() => setShowMobileMenu(false)}
+        />
+    );
 
-            <nav className="space-y-1 px-4">
-                {[
-                    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-                    { id: 'courses', icon: BookOpen, label: 'My Courses' },
-                    { id: 'events', icon: Calendar, label: 'Events' },
-                    { id: 'settings', icon: Settings, label: 'Settings' },
-                    { id: 'help', icon: HelpCircle, label: 'Support' }
-                ].map(item => (
-                    <button
-                        key={item.id}
-                        onClick={() => setActiveItem(item.id)}
-                        className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl ${activeItem === item.id
-                            ? 'bg-white/20 backdrop-blur-sm shadow-inner'
-                            : 'hover:bg-white/10'
-                            }`}
-                    >
-                        <item.icon size={20} className="flex-shrink-0" />
-                        {!isCollapsed && <span className="text-sm font-medium">{item.label}</span>}
-                    </button>
-                ))}
-            </nav>
-
+    return (
+        <>
+            <MobileMenu />
             <div
-                className="absolute right-0 top-0 w-2 h-full cursor-ew-resize hover:bg-white/20 active:bg-white/30"
-                onMouseDown={startResizing}
-            />
-        </div>
+                className={`fixed z-50 transition-all duration-300 ${isMobile
+                        ? `bottom-6 left-6 ${showMobileMenu ? 'w-64 h-auto rounded-2xl' : 'w-14 h-14 rounded-full'
+                        }`
+                        : 'left-0 top-0 h-screen'
+                    }`}
+                style={!isMobile ? { width: `${currentWidth}px` } : undefined}
+            >
+                <div className={`h-full bg-gradient-to-b from-[#1a1b41] to-[#2d2e6f] text-white ${isMobile ? (showMobileMenu ? 'rounded-2xl' : 'rounded-full') : ''
+                    } shadow-2xl`}>
+                    <div className={`flex items-center justify-between ${isMobile && !showMobileMenu ? 'h-14 w-14 p-0' : 'h-16 p-6'
+                        }`}>
+                        {(!isCollapsed || (isMobile && showMobileMenu)) && (
+                            <h1 className="hidden lg:block text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200">
+                                EDUFREE
+                            </h1>
+                        )}
+                        <button
+                            onClick={handleToggleCollapse}
+                            className={`text-white transition-colors ${isMobile && !showMobileMenu
+                                    ? 'w-14 h-14 flex items-center justify-center hover:bg-white/10 rounded-full'
+                                    : 'p-2 rounded-lg hover:bg-white/10'
+                                }`}
+                        >
+                            {isCollapsed || (isMobile && !showMobileMenu) ? (
+                                <Menu className="w-6 h-6" />
+                            ) : (
+                                <X className="w-6 h-6" />
+                            )}
+                        </button>
+                    </div>
+
+                    {(!isCollapsed || (isMobile && showMobileMenu)) && (
+                        <nav className="space-y-1 px-4 pb-6">
+                            {[
+                                { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+                                { id: 'courses', icon: BookOpen, label: 'My Courses' },
+                                { id: 'events', icon: Calendar, label: 'Events' },
+                                { id: 'settings', icon: Settings, label: 'Settings' },
+                                { id: 'help', icon: HelpCircle, label: 'Support' }
+                            ].map(item => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => {
+                                        setActiveItem(item.id);
+                                        if (isMobile) setShowMobileMenu(false);
+                                    }}
+                                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl ${activeItem === item.id
+                                            ? 'bg-white/20 backdrop-blur-sm shadow-inner'
+                                            : 'hover:bg-white/10'
+                                        }`}
+                                >
+                                    <item.icon size={20} className="flex-shrink-0" />
+                                    <span className="text-sm font-medium">{item.label}</span>
+                                </button>
+                            ))}
+                        </nav>
+                    )}
+
+                    {!isMobile && (
+                        <div
+                            className="absolute right-0 top-0 w-2 h-full cursor-ew-resize hover:bg-white/20 active:bg-white/30"
+                            onMouseDown={startResizing}
+                        />
+                    )}
+                </div>
+            </div>
+        </>
     );
 };
 
@@ -520,9 +581,10 @@ const Dashboard = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.DEFAULT_WIDTH);
     const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
     return (
-        <div className=" min-h-screen bg-gray-50 flex">
+        <div className="min-h-screen bg-gray-50 flex">
             <Head title='Dashboard' />
             <Sidebar
                 width={sidebarWidth}
@@ -535,7 +597,7 @@ const Dashboard = () => {
 
             <div
                 className="flex-1 min-h-screen transition-all duration-200"
-                style={{ marginLeft: `${sidebarWidth}px` }}
+                style={{ marginLeft: `${isMobile ? 84 : sidebarWidth}px` }}
             >
                 {/* navbar */}
                 <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100">
@@ -577,27 +639,31 @@ const Dashboard = () => {
                     </div>
                 </header>
 
-                <main className="p-6">
-                    <div className="grid grid-cols-12 gap-5">
-                        <div className="col-span-12">
-                            <div className="bg-gradient-to-r from-[#1a1b41] to-[#2d2e6f] rounded-xl p-6 text-white shadow-lg">
-                                <h2 className="text-xl font-semibold mb-2">Welcome back, Dimas! 👋</h2>
-                                <p className="text-white/85 text-sm max-w-2xl leading-relaxed">
+                <main className="p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-5">
+                        {/* Welcome Card - Full width on all screens */}
+                        <div className="col-span-1 sm:col-span-12">
+                            <div className="bg-gradient-to-r from-[#1a1b41] to-[#2d2e6f] rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
+                                <h2 className="text-lg sm:text-xl font-semibold mb-2">Welcome back, Dimas! 👋</h2>
+                                <p className="text-white/85 text-xs sm:text-sm max-w-2xl leading-relaxed">
                                     Track your learning progress, continue where you left off, and achieve your goals.
                                     You've completed 65% of your weekly learning objectives.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="col-span-12 lg:col-span-8">
+                        {/* Overview Card - Full width on mobile, 8 cols on lg */}
+                        <div className="col-span-1 sm:col-span-12 lg:col-span-8">
                             <Overview />
                         </div>
 
-                        <div className="col-span-12 lg:col-span-4">
+                        {/* Statistics Card - Full width on mobile, 4 cols on lg */}
+                        <div className="col-span-1 sm:col-span-12 lg:col-span-4">
                             <StatisticsCard />
                         </div>
 
-                        <div className="col-span-12">
+                        {/* Activity List - Always full width */}
+                        <div className="col-span-1 sm:col-span-12">
                             <ActivityList />
                         </div>
                     </div>
