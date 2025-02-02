@@ -12,8 +12,6 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-
-
         // Fetch all courses the user is enrolled in with progress
         $enrolledCourses = $user->courses()->withPivot('progress_percentage')->get();
 
