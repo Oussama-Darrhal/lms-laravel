@@ -13,7 +13,6 @@ const SIDEBAR = {
 };
 
 const StatisticsCard = ({ overallProgress }) => {
-
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
             <div className="p-4 sm:p-6 border-b border-gray-100">
@@ -694,7 +693,7 @@ const Dashboard = ({ overallProgress }) => {
                                 <h2 className="text-lg sm:text-xl font-semibold mb-2">Welcome back, {auth.user.name} 👋</h2>
                                 <p className="text-white/85 text-xs sm:text-sm max-w-2xl leading-relaxed">
                                     Track your learning progress, continue where you left off, and achieve your goals.
-                                    You've completed 65% of your weekly learning objectives.
+                                    You've completed {overallProgress}% of your weekly learning objectives.
                                 </p>
                             </div>
                         </div>

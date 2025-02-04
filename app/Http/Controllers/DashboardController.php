@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $totalCourses = $enrolledCourses->count();
         $courseProgressData = [];
 
-        // Calculate total progress and prepare course-wise progress data
+        // Calculate total progress and prepare course progress data
         foreach ($enrolledCourses as $course) {
             $percentageCompleted = $course->pivot->progress_percentage; // Progress from pivot table
             $courseProgressData[] = [

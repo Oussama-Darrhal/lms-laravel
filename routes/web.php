@@ -35,6 +35,7 @@ Route::get('/payment/{id}/success', [StripeController::class, 'success'])->name(
 Route::get('/payment/{id}/cancel', [StripeController::class, 'cancel'])->name('payment.cancel');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth'])->name('dashboard');
+Route::get('/mycourses', [CourseController::class, 'enrolled_index'])->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

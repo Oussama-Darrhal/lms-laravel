@@ -170,4 +170,8 @@ class CourseController extends Controller
         return redirect()->back();
     }
 
+    public function enrolled_index() {
+        return Inertia::render();
+    }
+
 }
