@@ -171,7 +171,7 @@ class CourseController extends Controller
     }
 
     public function enrolled_index() {
-        return Inertia::render();
+        return Inertia::render('MyCourse/Index');
     }
 
 }
