@@ -57,7 +57,7 @@ const courses = [
         id: 4,
         title: "UI/UX Design for Beginners",
         description: "Master the principles of user interface and experience design",
-        progress: 90,
+        progress: 10,
         status: "Continue",
         image: "/images/UIUX-Design.jpg",
         nextLesson: {
