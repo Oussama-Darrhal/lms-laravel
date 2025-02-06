@@ -1,5 +1,5 @@
 import { Head, usePage } from '@inertiajs/react';
-import { BookOpen, ChevronDown, Search, Trophy, Clock, Calendar, BarChart, TrendingUp, Star } from 'lucide-react';
+import { BookOpen, ChevronDown, Search, Trophy, Clock, Calendar, BarChart, TrendingUp, Star, User, LogOut } from 'lucide-react';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Bell, LayoutDashboard, Settings, HelpCircle, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -284,8 +284,6 @@ function Navbar() {
     const dropdownRef = useRef(null);
     const { auth } = usePage().props;
 
-    console.log(auth.user);
-
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -293,10 +291,7 @@ function Navbar() {
             }
         };
 
-        // Add event listener when the component mounts
         document.addEventListener('mousedown', handleClickOutside);
-
-        // Clean up the event listener when the component unmounts
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -306,22 +301,19 @@ function Navbar() {
         <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
             <div className="px-6 py-3 flex items-center justify-between">
                 <h1 className="text-lg font-semibold text-gray-800">INSTRUCTLY</h1>
-
                 <div className="relative" ref={dropdownRef}>
                     <div
                         className="flex items-center space-x-2 cursor-pointer group"
                         onClick={() => setMenuOpen(!menuOpen)}
                     >
-                        {/* Arrow Icon with Animation */}
                         <motion.div
                             animate={{ rotate: menuOpen ? 180 : 0 }}
                             whileHover={{ rotate: -15 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <ChevronDown className="w-5 h-5 text-gray-600" />
+                            <ChevronDown className="w-5 h-5 text-gray-600 transition-transform duration-300" />
                         </motion.div>
-
-                        <div className="relative">
+                        <div className="relative flex items-center">
                             <img
                                 src={auth.user.profile_picture}
                                 alt="Profile"
@@ -334,8 +326,6 @@ function Navbar() {
                             <p className="text-gray-500 text-sm capitalize">{auth.user.role}</p>
                         </div>
                     </div>
-
-                    {/* Dropdown */}
                     <AnimatePresence>
                         {menuOpen && (
                             <motion.div
@@ -343,18 +333,22 @@ function Navbar() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
-                                className="absolute right-0 mt-3 w-48 bg-white border border-gray-200 rounded-lg shadow-lg"
+                                className="absolute right-0 mt-3 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-30"
                             >
                                 <ul className="py-2 text-gray-700">
-                                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer">
-                                        <User className="w-5 h-5 mr-2 text-gray-600" /> Profile
-                                    </li>
-                                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer">
-                                        <BookOpen className="w-5 h-5 mr-2 text-gray-600" /> Courses
-                                    </li>
-                                    <li className="flex items-center px-4 py-2 hover:bg-red-100 text-red-500 transition duration-200 cursor-pointer">
-                                        <LogOut className="w-5 h-5 mr-2 text-red-500" /> Sign Out
-                                    </li>
+                                    {['Profile', 'Courses', 'Sign Out'].map((item, index) => (
+                                        <motion.li
+                                            key={index}
+                                            className={`flex items-center px-4 py-2 cursor-pointer transition duration-200 ${item === 'Sign Out' ? 'hover:bg-red-100 text-red-500' : 'hover:bg-gray-100'
+                                                }`}
+                                            whileHover={{ scale: 1.05 }}
+                                        >
+                                            {item === 'Profile' && <User className="w-5 h-5 mr-2 text-gray-600" />}
+                                            {item === 'Courses' && <BookOpen className="w-5 h-5 mr-2 text-gray-600" />}
+                                            {item === 'Sign Out' && <LogOut className="w-5 h-5 mr-2 text-red-500" />}
+                                            {item}
+                                        </motion.li>
+                                    ))}
                                 </ul>
                             </motion.div>
                         )}
@@ -365,16 +359,91 @@ function Navbar() {
     );
 }
 
+const CourseCard = ({ course }) => {
+    return (
+        <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group transform hover:scale-105">
+            <div className="relative">
+                <div className="absolute top-4 right-4 z-10 flex space-x-2">
+                    <span className={`bg-${course.difficultyColor}/80 text-white text-xs px-2.5 py-1 rounded-full`}>
+                        {course.difficulty}
+                    </span>
+                    {course.progress === 100 && (
+                        <span className="bg-green-500/80 text-white text-xs px-2.5 py-1 rounded-full">
+                            Completed
+                        </span>
+                    )}
+                </div>
+                <img
+                    src={course.image}
+                    alt={course.title}
+                    className="w-full h-48 object-cover group-hover:opacity-90 transition-opacity duration-300"
+                />
+            </div>
+            <div className="p-5">
+                <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-lg font-bold text-gray-900 truncate pr-4">
+                        {course.title}
+                    </h3>
+                    <PlayCircle
+                        size={24}
+                        className="text-[#1a1b41] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    />
+                </div>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {course.description}
+                </p>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2 text-gray-600 text-sm">
+                        <img
+                            src="/api/placeholder/24/24" // Placeholder image for instructor
+                            alt="Instructor"
+                            className="w-6 h-6 rounded-full"
+                        />
+                        <span>{course.instructor}</span>
+                    </div>
+                    <div className="w-1/3">
+                        <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div
+                                className="bg-[#1a1b41] h-full transition-all duration-300"
+                                style={{ width: `${course.progress}%` }}
+                            />
+                        </div>
+                        <div className="text-right text-xs text-gray-600 mt-1">
+                            {course.progress}%
+                        </div>
+                    </div>
+                </div>
+                <button className="w-full mt-4 py-3 bg-[#1a1b41] text-white rounded-lg hover:bg-[#2d2e6f] transition-colors duration-200 shadow-md hover:shadow-lg">
+                    {course.progress === 100 ? 'View Certificate' : 'Continue Learning'}
+                </button>
+            </div>
+        </div>
+    );
+};
+
+import { debounce } from 'lodash'; // Importing lodash for debounce functionality
+
 const CoursesPage = () => {
     const { auth } = usePage().props;
+
     const [activeFilter, setActiveFilter] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.COLLAPSED_WIDTH);
-    const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [coursesPerPage] = useState(6); // Define how many courses to show per page
+    const [loading, setLoading] = useState(false);
     const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 1024);
 
-    // Filtering and searching logic
+    // Debounced search function
+    const debouncedSearch = debounce((term) => {
+        setSearchTerm(term);
+    }, 300);
+
+    const handleSearchChange = (e) => {
+        debouncedSearch(e.target.value);
+    };
+
     const filteredCourses = courses.filter(course =>
         course.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (activeFilter === 'all' ||
@@ -383,142 +452,74 @@ const CoursesPage = () => {
         )
     );
 
+    // Pagination logic
+    const indexOfLastCourse = currentPage * coursesPerPage;
+    const indexOfFirstCourse = indexOfLastCourse - coursesPerPage;
+    const currentCourses = filteredCourses.slice(indexOfFirstCourse, indexOfLastCourse);
+
+    const totalPages = Math.ceil(filteredCourses.length / coursesPerPage);
+
+    const handlePagination = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
             <Head title="My Learning Journey" />
             <Sidebar
                 width={sidebarWidth}
                 isCollapsed={isCollapsed}
                 setWidth={setSidebarWidth}
                 setIsCollapsed={setIsCollapsed}
-                lastWidthBeforeCollapse={lastWidthBeforeCollapse}
-                setLastWidthBeforeCollapse={setLastWidthBeforeCollapse}
             />
-
-            <div
-                className="flex-1 min-h-screen transition-all duration-200"
-                style={{ marginLeft: `${isMobile ? 0 : 90}px` }}
-            >
-                {/* navbar */}
+            <div className={`flex-1 min-h-screen transition-all duration-200 ${isMobile ? 'ml-0' : 'ml-24'}`}>
                 <Navbar />
-                {/* Header Section */}
-                <header className="px-4 sm:px-6 py-6 sm:py-8">
+                <header className="px-4 sm:px-6 py-6 sm:py-8 bg-white shadow-md rounded-b-lg">
                     <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-[#1a1b41] to-[#2d2e6f]">
+                            <h1 className="text-4xl font-extrabold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-[#1a1b41] to-[#2d2e6f]">
                                 Welcome, {auth.user.name}
                             </h1>
-                            <p className="text-gray-600 mt-2">
+                            <p className="text-gray-700 mt-2 text-lg">
                                 Continue your learning journey and unlock new skills
                             </p>
                         </div>
-                        <div className="flex items-center space-x-4">
-                            <div className="relative">
-                                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                                <input
-                                    type="text"
-                                    placeholder="Search courses..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pl-10 pr-4 py-2.5 w-64 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#1a1b41]/20 focus:border-[#1a1b41] transition-all"
-                                />
-                            </div>
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 transition-colors duration-300" size={20} />
+                            <input
+                                type="text"
+                                placeholder="Search courses..."
+                                onChange={handleSearchChange}
+                                className="pl-10 pr-4 py-3 w-64 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#1a1b41]/30 focus:border-[#1a1b41] transition-all duration-300 shadow-sm hover:shadow-md"
+                            />
                         </div>
                     </div>
                 </header>
 
-                {/* Filter Section */}
-                <div className="flex justify-between items-center mb-6 px-4 sm:px-6 py-2 sm:py-4">
+                <div className="flex justify-between items-center mb-6 px-4 sm:px-6 py-4 bg-white shadow-md rounded-lg">
                     <div className="flex space-x-2">
-                        {[
-                            { id: 'all', label: 'All Courses', icon: BarChart2 },
-                            { id: 'in-progress', label: 'In Progress', icon: TrendingUp },
-                            { id: 'completed', label: 'Completed', icon: Star }
-                        ].map(filter => (
+                        {[ /* Filter options */ ].map(filter => (
                             <button
                                 key={filter.id}
                                 onClick={() => setActiveFilter(filter.id)}
-                                className={`
-                                    flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all
-                                    ${activeFilter === filter.id
-                                        ? 'bg-[#1a1b41] text-white'
-                                        : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
-                                    }
-                                `}
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeFilter === filter.id ? 'bg-[#1a1b41] text-white shadow-md' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'}`}
+                                aria-pressed={activeFilter === filter.id}
                             >
-                                <filter.icon size={16} />
+                                <filter.icon size={18} />
                                 <span>{filter.label}</span>
                             </button>
                         ))}
                     </div>
                 </div>
 
-                {/* Courses Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 py-2 sm:py-4">
-                    {filteredCourses.map(course => (
-                        <div
-                            key={course.id}
-                            className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
-                        >
-                            <div className="relative">
-                                <div className="absolute top-4 right-4 z-10 flex space-x-2">
-                                    <span className="bg-[#1a1b41]/80 text-white text-xs px-2.5 py-1 rounded-full">
-                                        {course.difficulty}
-                                    </span>
-                                    {course.progress === 100 && (
-                                        <span className="bg-green-500/80 text-white text-xs px-2.5 py-1 rounded-full">
-                                            Completed
-                                        </span>
-                                    )}
-                                </div>
-                                <img
-                                    src={course.image}
-                                    alt={course.title}
-                                    className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-300"
-                                />
-                            </div>
-                            <div className="p-5">
-                                <div className="flex justify-between items-center mb-3">
-                                    <h3 className="text-lg font-bold text-gray-900 truncate pr-4">
-                                        {course.title}
-                                    </h3>
-                                    <PlayCircle
-                                        size={24}
-                                        className="text-[#1a1b41] opacity-0 group-hover:opacity-100 transition-opacity"
-                                    />
-                                </div>
-                                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                                    {course.description}
-                                </p>
-
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                                        <img
-                                            src="/api/placeholder/24/24"
-                                            alt="Instructor"
-                                            className="w-6 h-6 rounded-full"
-                                        />
-                                        <span>{course.instructor}</span>
-                                    </div>
-                                    <div className="w-1/3">
-                                        <div className="bg-gray-200 rounded-full h-2 overflow-hidden">
-                                            <div
-                                                className="bg-[#1a1b41] h-full"
-                                                style={{ width: `${course.progress}%` }}
-                                            />
-                                        </div>
-                                        <div className="text-right text-xs text-gray-600 mt-1">
-                                            {course.progress}%
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button className="w-full mt-4 py-3 bg-[#1a1b41] text-white rounded-lg hover:bg-[#2d2e6f] transition-colors">
-                                    {course.progress === 100 ? 'View Certificate' : 'Continue Learning'}
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                    {loading ? (
+                        <div className="text-center py-12">Loading courses...</div>
+                    ) : (
+                        currentCourses.map(course => (
+                            <CourseCard key={course.id} course={course} />
+                        ))
+                    )}
                 </div>
 
                 {filteredCourses.length === 0 && (
@@ -526,6 +527,18 @@ const CoursesPage = () => {
                         <p className="text-gray-500">No courses found matching your search or filter.</p>
                     </div>
                 )}
+
+                <div className="flex justify-center mt-4">
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handlePagination(index + 1)}
+                            className={`mx-1 px-3 py-1 rounded-full ${currentPage === index + 1 ? 'bg-[#1a1b41] text-white' : 'bg-gray-200 text-gray-700'}`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );
