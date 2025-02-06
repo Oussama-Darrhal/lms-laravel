@@ -1,23 +1,49 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { Head, usePage } from '@inertiajs/react';
-import { Bell, Search, ChevronDown, LayoutDashboard, BookOpen, Calendar, Settings, HelpCircle, Trophy, Menu, X, Clock } from 'lucide-react';
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip } from 'recharts';
+import { motion, AnimatePresence } from "framer-motion";
+import { Head, usePage, router } from "@inertiajs/react";
+import {
+    Bell,
+    Search,
+    ChevronDown,
+    LayoutDashboard,
+    BookOpen,
+    Calendar,
+    Settings,
+    HelpCircle,
+    Trophy,
+    Menu,
+    X,
+    Clock,
+    Link,
+} from "lucide-react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    ResponsiveContainer,
+    Tooltip,
+} from "recharts";
 import { LogOut, User } from "lucide-react";
 
 const SIDEBAR = {
     COLLAPSED_WIDTH: 84,
     MIN_WIDTH: 200,
     MAX_WIDTH: 400,
-    DEFAULT_WIDTH: 240
+    DEFAULT_WIDTH: 240,
 };
 
 const StatisticsCard = ({ overallProgress }) => {
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-100 transition-all hover:shadow-xl">
             <div className="p-4 sm:p-6 border-b border-gray-100">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Learning Progress</h2>
-                <p className="text-gray-500 text-xs sm:text-sm mt-1">Videos Watched</p>
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+                    Learning Progress
+                </h2>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                    Videos Watched
+                </p>
             </div>
             <div className="p-4 sm:p-6">
                 <div className="relative w-full max-w-[14rem] mx-auto aspect-square">
@@ -36,7 +62,9 @@ const StatisticsCard = ({ overallProgress }) => {
                             className="text-[#1a1b41] transition-all duration-1000 ease-in-out"
                             strokeWidth="8"
                             strokeDasharray={`${2 * Math.PI * 45}%`}
-                            strokeDashoffset={`${2 * Math.PI * 45 * (1 - overallProgress * 0.01)}%`}
+                            strokeDashoffset={`${
+                                2 * Math.PI * 45 * (1 - overallProgress * 0.01)
+                            }%`}
                             strokeLinecap="round"
                             stroke="currentColor"
                             fill="transparent"
@@ -46,8 +74,12 @@ const StatisticsCard = ({ overallProgress }) => {
                         />
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-2xl sm:text-3xl font-bold text-gray-800">{overallProgress}%</span>
-                        <span className="text-gray-500 text-xs sm:text-sm mt-1">Completion Rate</span>
+                        <span className="text-2xl sm:text-3xl font-bold text-gray-800">
+                            {overallProgress}%
+                        </span>
+                        <span className="text-gray-500 text-xs sm:text-sm mt-1">
+                            Completion Rate
+                        </span>
                     </div>
                 </div>
             </div>
@@ -60,13 +92,13 @@ const previewVariants = {
     visible: {
         opacity: 1,
         x: 0,
-        transition: { duration: 0.3, ease: "easeOut" }
+        transition: { duration: 0.3, ease: "easeOut" },
     },
     exit: {
         opacity: 0,
         x: -16,
-        transition: { duration: 0.2, ease: "easeIn" }
-    }
+        transition: { duration: 0.2, ease: "easeIn" },
+    },
 };
 
 const contentVariants = {
@@ -75,9 +107,9 @@ const contentVariants = {
         opacity: 1,
         transition: {
             staggerChildren: 0.1,
-            delayChildren: 0.2
-        }
-    }
+            delayChildren: 0.2,
+        },
+    },
 };
 
 const itemVariants = {
@@ -85,8 +117,8 @@ const itemVariants = {
     visible: {
         opacity: 1,
         x: 0,
-        transition: { duration: 0.3, ease: "easeOut" }
-    }
+        transition: { duration: 0.3, ease: "easeOut" },
+    },
 };
 
 const courses = [
@@ -99,11 +131,11 @@ const courses = [
         image: "/api/placeholder/80/60",
         nextLesson: {
             title: "Introduction to HTML5",
-            duration: "12 mins"
+            duration: "12 mins",
         },
         timeEstimation: "2 weeks remaining",
         lastAccessed: "2 hours ago",
-        version: "2.1.5"
+        version: "2.1.5",
     },
     {
         id: 2,
@@ -114,11 +146,11 @@ const courses = [
         image: "/api/placeholder/80/60",
         nextLesson: {
             title: "Course Completed",
-            duration: ""
+            duration: "",
         },
         timeEstimation: "Fully completed",
         lastAccessed: "5 days ago",
-        version: "1.4.2"
+        version: "1.4.2",
     },
     {
         id: 3,
@@ -129,41 +161,48 @@ const courses = [
         image: "/api/placeholder/80/60",
         nextLesson: {
             title: "Python for Data Analysis",
-            duration: "18 mins"
+            duration: "18 mins",
         },
         timeEstimation: "3 weeks remaining",
         lastAccessed: "1 day ago",
-        version: "3.0.0"
+        version: "3.0.0",
     },
     {
         id: 4,
         title: "UI/UX Design for Beginners",
-        description: "Master the principles of user interface and experience design",
+        description:
+            "Master the principles of user interface and experience design",
         progress: 90,
         status: "Continue",
         image: "/api/placeholder/80/60",
         nextLesson: {
             title: "Figma Basics",
-            duration: "15 mins"
+            duration: "15 mins",
         },
         timeEstimation: "4 days remaining",
         lastAccessed: "3 hours ago",
-        version: "2.6.1"
-    }
+        version: "2.6.1",
+    },
 ];
 const ActivityList = () => {
-
     return (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="p-6 border-b border-gray-100">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
-                        <h2 className="text-xl font-semibold text-gray-900">Learning Activity</h2>
-                        <p className="text-sm text-gray-500 mt-1">Recent courses and progress</p>
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            Learning Activity
+                        </h2>
+                        <p className="text-sm text-gray-500 mt-1">
+                            Recent courses and progress
+                        </p>
                     </div>
                     <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
                         <div className="relative flex-1">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                            <Search
+                                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                                size={18}
+                            />
                             <input
                                 type="text"
                                 placeholder="Search courses..."
@@ -171,7 +210,9 @@ const ActivityList = () => {
                             />
                         </div>
                         <button className="flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors border border-gray-200">
-                            <span className="text-gray-700 text-sm">Filter</span>
+                            <span className="text-gray-700 text-sm">
+                                Filter
+                            </span>
                             <ChevronDown size={16} className="text-gray-500" />
                         </button>
                     </div>
@@ -186,7 +227,7 @@ const ActivityList = () => {
                 </div>
 
                 <div className="space-y-2">
-                    {courses.map(course => {
+                    {courses.map((course) => {
                         const [isHovered, setIsHovered] = useState(false);
 
                         return (
@@ -212,34 +253,88 @@ const ActivityList = () => {
                                                 animate="visible"
                                                 className="space-y-3 overflow-hidden"
                                             >
-                                                <motion.div variants={itemVariants} className="flex justify-between items-start mb-3">
-                                                    <h4 className="text-sm font-semibold text-gray-900">Course Preview</h4>
-                                                    <span className="text-xs text-gray-500">{course.lastAccessed}</span>
+                                                <motion.div
+                                                    variants={itemVariants}
+                                                    className="flex justify-between items-start mb-3"
+                                                >
+                                                    <h4 className="text-sm font-semibold text-gray-900">
+                                                        Course Preview
+                                                    </h4>
+                                                    <span className="text-xs text-gray-500">
+                                                        {course.lastAccessed}
+                                                    </span>
                                                 </motion.div>
 
                                                 <div className="space-y-3">
-                                                    <motion.div variants={itemVariants} className="flex items-center text-sm text-gray-600">
-                                                        <BookOpen size={14} className="mr-2 text-[#1a1b41] animate-pulse" />
-                                                        <span className="truncate">Next: {course.nextLesson.title}</span>
+                                                    <motion.div
+                                                        variants={itemVariants}
+                                                        className="flex items-center text-sm text-gray-600"
+                                                    >
+                                                        <BookOpen
+                                                            size={14}
+                                                            className="mr-2 text-[#1a1b41] animate-pulse"
+                                                        />
+                                                        <span className="truncate">
+                                                            Next:{" "}
+                                                            {
+                                                                course
+                                                                    .nextLesson
+                                                                    .title
+                                                            }
+                                                        </span>
                                                     </motion.div>
 
-                                                    {course.nextLesson.duration && (
-                                                        <motion.div variants={itemVariants} className="flex items-center text-sm text-gray-600">
-                                                            <Clock size={14} className="mr-2 text-[#1a1b41] animate-spin-slow" />
-                                                            <span>{course.nextLesson.duration} remaining</span>
+                                                    {course.nextLesson
+                                                        .duration && (
+                                                        <motion.div
+                                                            variants={
+                                                                itemVariants
+                                                            }
+                                                            className="flex items-center text-sm text-gray-600"
+                                                        >
+                                                            <Clock
+                                                                size={14}
+                                                                className="mr-2 text-[#1a1b41] animate-spin-slow"
+                                                            />
+                                                            <span>
+                                                                {
+                                                                    course
+                                                                        .nextLesson
+                                                                        .duration
+                                                                }{" "}
+                                                                remaining
+                                                            </span>
                                                         </motion.div>
                                                     )}
 
-                                                    <motion.div variants={itemVariants} className="flex items-center text-sm text-gray-600">
-                                                        <Calendar size={14} className="mr-2 text-[#1a1b41] animate-bounce" />
-                                                        <span className="truncate">{course.timeEstimation}</span>
+                                                    <motion.div
+                                                        variants={itemVariants}
+                                                        className="flex items-center text-sm text-gray-600"
+                                                    >
+                                                        <Calendar
+                                                            size={14}
+                                                            className="mr-2 text-[#1a1b41] animate-bounce"
+                                                        />
+                                                        <span className="truncate">
+                                                            {
+                                                                course.timeEstimation
+                                                            }
+                                                        </span>
                                                     </motion.div>
                                                 </div>
 
-                                                <motion.div variants={itemVariants} className="mt-4 pt-3 border-t border-gray-100">
+                                                <motion.div
+                                                    variants={itemVariants}
+                                                    className="mt-4 pt-3 border-t border-gray-100"
+                                                >
                                                     <div className="flex items-center justify-between text-xs text-gray-500">
-                                                        <span>Course ID: {course.id}</span>
-                                                        <span>v{course.version}</span>
+                                                        <span>
+                                                            Course ID:{" "}
+                                                            {course.id}
+                                                        </span>
+                                                        <span>
+                                                            v{course.version}
+                                                        </span>
                                                     </div>
                                                 </motion.div>
                                             </motion.div>
@@ -258,7 +353,9 @@ const ActivityList = () => {
                                         />
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-semibold text-gray-900 truncate">{course.title}</h3>
+                                        <h3 className="font-semibold text-gray-900 truncate">
+                                            {course.title}
+                                        </h3>
                                         <p className="text-sm text-gray-500 mt-1 line-clamp-2 pr-4">
                                             {course.description}
                                         </p>
@@ -269,13 +366,19 @@ const ActivityList = () => {
                                     <div className="flex items-center gap-4">
                                         <div className="flex-1">
                                             <div className="flex justify-between text-xs mb-1.5">
-                                                <span className="text-gray-500">Progress</span>
-                                                <span className="font-medium text-gray-700">{course.progress}%</span>
+                                                <span className="text-gray-500">
+                                                    Progress
+                                                </span>
+                                                <span className="font-medium text-gray-700">
+                                                    {course.progress}%
+                                                </span>
                                             </div>
                                             <div className="relative h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                                 <div
                                                     className="absolute top-0 left-0 h-full bg-[#1a1b41] transition-all duration-700 ease-out"
-                                                    style={{ width: `${course.progress}%` }}
+                                                    style={{
+                                                        width: `${course.progress}%`,
+                                                    }}
                                                 >
                                                     <div className="absolute inset-0 pattern-dots pattern-white pattern-size-1 pattern-opacity-20" />
                                                 </div>
@@ -286,15 +389,21 @@ const ActivityList = () => {
 
                                 <div className="col-span-2 md:pl-4">
                                     <button
-                                        className={`w-full md:w-auto flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md transition-all duration-200 border ${course.status === "Certificate"
-                                            ? 'bg-white text-[#1a1b41] border-[#1a1b41] hover:bg-[#1a1b41]/5'
-                                            : 'bg-[#1a1b41] text-white hover:bg-[#2d2e6f] border-transparent'
-                                            }`}
+                                        className={`w-full md:w-auto flex items-center justify-center space-x-2 px-4 py-2.5 rounded-md transition-all duration-200 border ${
+                                            course.status === "Certificate"
+                                                ? "bg-white text-[#1a1b41] border-[#1a1b41] hover:bg-[#1a1b41]/5"
+                                                : "bg-[#1a1b41] text-white hover:bg-[#2d2e6f] border-transparent"
+                                        }`}
                                     >
                                         {course.status === "Certificate" && (
-                                            <Trophy size={16} className="flex-shrink-0 text-[#1a1b41]" />
+                                            <Trophy
+                                                size={16}
+                                                className="flex-shrink-0 text-[#1a1b41]"
+                                            />
                                         )}
-                                        <span className="truncate text-sm">{course.status}</span>
+                                        <span className="truncate text-sm">
+                                            {course.status}
+                                        </span>
                                     </button>
                                 </div>
                             </div>
@@ -305,59 +414,89 @@ const ActivityList = () => {
 
             {/* Custom Animation Styles */}
             <style jsx global>{`
-        @keyframes spin-slow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-            }
-            @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-            }
-            @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-4px); }
-            }
-            .animate-spin-slow {
-            animation: spin-slow 8s linear infinite;
-            }
-            .animate-pulse {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-            .animate-bounce {
-            animation: bounce 1.5s ease-in-out infinite;
-            }
-            .pattern-dots {
-            background-image: radial-gradient(currentColor 1px, transparent 1px);
-            background-size: 8px 8px;
-            }
-        `}</style>
+                @keyframes spin-slow {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+                @keyframes pulse {
+                    0%,
+                    100% {
+                        opacity: 1;
+                    }
+                    50% {
+                        opacity: 0.5;
+                    }
+                }
+                @keyframes bounce {
+                    0%,
+                    100% {
+                        transform: translateY(0);
+                    }
+                    50% {
+                        transform: translateY(-4px);
+                    }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 8s linear infinite;
+                }
+                .animate-pulse {
+                    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+                }
+                .animate-bounce {
+                    animation: bounce 1.5s ease-in-out infinite;
+                }
+                .pattern-dots {
+                    background-image: radial-gradient(
+                        currentColor 1px,
+                        transparent 1px
+                    );
+                    background-size: 8px 8px;
+                }
+            `}</style>
         </div>
     );
 };
 
-const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBeforeCollapse, setLastWidthBeforeCollapse }) => {
-    const [activeItem, setActiveItem] = useState('dashboard');
+const Sidebar = ({
+    width,
+    isCollapsed,
+    setWidth,
+    setIsCollapsed,
+    lastWidthBeforeCollapse,
+    setLastWidthBeforeCollapse,
+}) => {
+    const [activeItem, setActiveItem] = useState("dashboard");
     const [isResizing, setIsResizing] = useState(false);
     const [currentWidth, setCurrentWidth] = useState(width);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
     const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-    const startResizing = useCallback((e) => {
-        if (!isMobile) {
-            e.preventDefault();
-            setIsResizing(true);
-        }
-    }, [isMobile]);
+    const startResizing = useCallback(
+        (e) => {
+            if (!isMobile) {
+                e.preventDefault();
+                setIsResizing(true);
+            }
+        },
+        [isMobile]
+    );
 
-    const resize = useCallback((e) => {
-        if (isResizing && !isMobile) {
-            const newWidth = Math.min(
-                Math.max(e.clientX, SIDEBAR.MIN_WIDTH),
-                SIDEBAR.MAX_WIDTH
-            );
-            setCurrentWidth(newWidth);
-        }
-    }, [isResizing, isMobile]);
+    const resize = useCallback(
+        (e) => {
+            if (isResizing && !isMobile) {
+                const newWidth = Math.min(
+                    Math.max(e.clientX, SIDEBAR.MIN_WIDTH),
+                    SIDEBAR.MAX_WIDTH
+                );
+                setCurrentWidth(newWidth);
+            }
+        },
+        [isResizing, isMobile]
+    );
 
     const stopResizing = useCallback(() => {
         if (!isMobile) {
@@ -397,23 +536,23 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
             }
         };
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
     }, [setIsCollapsed, setWidth, lastWidthBeforeCollapse]);
 
     useEffect(() => {
         if (isResizing) {
-            window.addEventListener('mousemove', resize);
-            window.addEventListener('mouseup', stopResizing);
-            document.body.style.cursor = 'ew-resize';
-            document.body.style.userSelect = 'none';
+            window.addEventListener("mousemove", resize);
+            window.addEventListener("mouseup", stopResizing);
+            document.body.style.cursor = "ew-resize";
+            document.body.style.userSelect = "none";
         }
 
         return () => {
-            window.removeEventListener('mousemove', resize);
-            window.removeEventListener('mouseup', stopResizing);
-            document.body.style.cursor = 'default';
-            document.body.style.userSelect = 'auto';
+            window.removeEventListener("mousemove", resize);
+            window.removeEventListener("mouseup", stopResizing);
+            document.body.style.cursor = "default";
+            document.body.style.userSelect = "auto";
         };
     }, [isResizing, resize, stopResizing]);
 
@@ -424,8 +563,9 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
     // Mobile menu overlay
     const MobileMenu = () => (
         <div
-            className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity z-40 ${showMobileMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                }`}
+            className={`fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity z-40 ${
+                showMobileMenu ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
             onClick={() => setShowMobileMenu(false)}
         />
     );
@@ -434,17 +574,33 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
         <>
             <MobileMenu />
             <div
-                className={`fixed z-50 transition-all duration-300 ${isMobile
-                    ? `bottom-6 left-6 ${showMobileMenu ? 'w-64 h-auto rounded-2xl' : 'w-14 h-14 rounded-full'
-                    }`
-                    : 'left-0 top-0 h-screen'
-                    }`}
+                className={`fixed z-50 transition-all duration-300 ${
+                    isMobile
+                        ? `bottom-6 left-6 ${
+                              showMobileMenu
+                                  ? "w-64 h-auto rounded-2xl"
+                                  : "w-14 h-14 rounded-full"
+                          }`
+                        : "left-0 top-0 h-screen"
+                }`}
                 style={!isMobile ? { width: `${currentWidth}px` } : undefined}
             >
-                <div className={`h-full bg-gradient-to-b from-[#1a1b41] to-[#2d2e6f] text-white ${isMobile ? (showMobileMenu ? 'rounded-2xl' : 'rounded-full') : ''
-                    } shadow-2xl`}>
-                    <div className={`flex items-center justify-between ${isMobile && !showMobileMenu ? 'h-14 w-14 p-0' : 'h-16 p-6'
-                        }`}>
+                <div
+                    className={`h-full bg-gradient-to-b from-[#1a1b41] to-[#2d2e6f] text-white ${
+                        isMobile
+                            ? showMobileMenu
+                                ? "rounded-2xl"
+                                : "rounded-full"
+                            : ""
+                    } shadow-2xl`}
+                >
+                    <div
+                        className={`flex items-center justify-between ${
+                            isMobile && !showMobileMenu
+                                ? "h-14 w-14 p-0"
+                                : "h-16 p-6"
+                        }`}
+                    >
                         {(!isCollapsed || (isMobile && showMobileMenu)) && (
                             <h1 className="hidden lg:block text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200">
                                 INSTRUCTLY
@@ -452,10 +608,11 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
                         )}
                         <button
                             onClick={handleToggleCollapse}
-                            className={`text-white transition-colors ${isMobile && !showMobileMenu
-                                ? 'w-14 h-14 flex items-center justify-center hover:bg-white/10 rounded-full'
-                                : 'p-2 rounded-lg hover:bg-white/10'
-                                }`}
+                            className={`text-white transition-colors ${
+                                isMobile && !showMobileMenu
+                                    ? "w-14 h-14 flex items-center justify-center hover:bg-white/10 rounded-full"
+                                    : "p-2 rounded-lg hover:bg-white/10"
+                            }`}
                         >
                             {isCollapsed || (isMobile && !showMobileMenu) ? (
                                 <Menu className="w-6 h-6" />
@@ -468,34 +625,58 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
                     {(!isCollapsed || (isMobile && showMobileMenu)) && (
                         <nav className="space-y-1 px-4 pb-6">
                             {[
-                                { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-                                { id: 'courses', icon: BookOpen, label: 'My Courses' },
-                                { id: 'events', icon: Calendar, label: 'Events' },
-                                { id: 'settings', icon: Settings, label: 'Settings' },
-                                { id: 'help', icon: HelpCircle, label: 'Support' }
-                            ].map(item => (
+                                {
+                                    id: "dashboard",
+                                    icon: LayoutDashboard,
+                                    label: "Dashboard",
+                                },
+                                {
+                                    id: "courses",
+                                    icon: BookOpen,
+                                    label: "My Courses",
+                                },
+                                {
+                                    id: "events",
+                                    icon: Calendar,
+                                    label: "Events",
+                                },
+                                {
+                                    id: "settings",
+                                    icon: Settings,
+                                    label: "Settings",
+                                },
+                                {
+                                    id: "help",
+                                    icon: HelpCircle,
+                                    label: "Support",
+                                },
+                            ].map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => {
                                         setActiveItem(item.id);
                                         if (isMobile) setShowMobileMenu(false);
                                     }}
-                                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl ${activeItem === item.id
-                                        ? 'bg-white/20 backdrop-blur-sm shadow-inner'
-                                        : 'hover:bg-white/10'
-                                        }`}
+                                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl ${
+                                        activeItem === item.id
+                                            ? "bg-white/20 backdrop-blur-sm shadow-inner"
+                                            : "hover:bg-white/10"
+                                    }`}
                                 >
-                                    <item.icon size={20} className="flex-shrink-0" />
-                                    <span className="text-sm font-medium">{item.label}</span>
+                                    <item.icon
+                                        size={20}
+                                        className="flex-shrink-0"
+                                    />
+                                    <span className="text-sm font-medium">
+                                        {item.label}
+                                    </span>
                                 </button>
                             ))}
                         </nav>
                     )}
 
                     {!isMobile && (
-                        <div
-                            className="absolute right-0 top-0 w-2 h-full cursor-ew-resize hover:bg-white/20 active:bg-white/30"
-                        />
+                        <div className="absolute right-0 top-0 w-2 h-full cursor-ew-resize hover:bg-white/20 active:bg-white/30" />
                     )}
                 </div>
             </div>
@@ -504,18 +685,18 @@ const Sidebar = ({ width, isCollapsed, setWidth, setIsCollapsed, lastWidthBefore
 };
 
 const data = [
-    { name: '1 Jan', value: 2 },
-    { name: '2 Jan', value: 4 },
-    { name: '3 Jan', value: 3 },
-    { name: '4 Jan', value: 2 },
-    { name: '5 Jan', value: 3 },
-    { name: '6 Jan', value: 2 },
-    { name: '7 Jan', value: 3 },
-    { name: '8 Jan', value: 6 },
-    { name: '9 Jan', value: 2 },
-    { name: '10 Jan', value: 3 },
-    { name: '11 Jan', value: 2 },
-    { name: '12 Jan', value: 3 },
+    { name: "1 Jan", value: 2 },
+    { name: "2 Jan", value: 4 },
+    { name: "3 Jan", value: 3 },
+    { name: "4 Jan", value: 2 },
+    { name: "5 Jan", value: 3 },
+    { name: "6 Jan", value: 2 },
+    { name: "7 Jan", value: 3 },
+    { name: "8 Jan", value: 6 },
+    { name: "9 Jan", value: 2 },
+    { name: "10 Jan", value: 3 },
+    { name: "11 Jan", value: 2 },
+    { name: "12 Jan", value: 3 },
 ];
 
 const CustomTooltip = ({ active, payload }) => {
@@ -535,8 +716,12 @@ const Overview = () => {
             <div className="p-6 border-b border-gray-100">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h2 className="text-xl font-semibold text-gray-800">Overview</h2>
-                        <p className="text-gray-500 text-sm mt-1">Completed Videos (Weekly)</p>
+                        <h2 className="text-xl font-semibold text-gray-800">
+                            Overview
+                        </h2>
+                        <p className="text-gray-500 text-sm mt-1">
+                            Completed Videos (Weekly)
+                        </p>
                     </div>
                 </div>
             </div>
@@ -544,26 +729,33 @@ const Overview = () => {
                 <div className="h-72">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={data} barSize={32}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                            <CartesianGrid
+                                strokeDasharray="3 3"
+                                vertical={false}
+                                stroke="#f0f0f0"
+                            />
                             <XAxis
                                 dataKey="name"
                                 fontSize={12}
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: '#6b7280' }}
+                                tick={{ fill: "#6b7280" }}
                             />
                             <YAxis
                                 fontSize={12}
                                 tickLine={false}
                                 axisLine={false}
-                                tick={{ fill: '#6b7280' }}
+                                tick={{ fill: "#6b7280" }}
                             />
-                            <Tooltip content={<CustomTooltip />} cursor={false} />
+                            <Tooltip
+                                content={<CustomTooltip />}
+                                cursor={false}
+                            />
                             <Bar
                                 dataKey="value"
                                 fill="#1a1b41"
                                 radius={[4, 4, 0, 0]}
-                                background={{ fill: '#f3f4f6' }}
+                                background={{ fill: "#f3f4f6" }}
                             />
                         </BarChart>
                     </ResponsiveContainer>
@@ -582,24 +774,29 @@ function Navbar() {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
                 setMenuOpen(false);
             }
         };
 
         // Add event listener when the component mounts
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
 
         // Clean up the event listener when the component unmounts
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
 
     return (
         <header className="sticky top-0 z-20 bg-white/95 backdrop-blur-lg border-b border-gray-100 shadow-sm">
             <div className="px-6 py-3 flex items-center justify-between">
-                <h1 className="text-lg font-semibold text-gray-800">INSTRUCTLY</h1>
+                <h1 className="text-lg font-semibold text-gray-800">
+                    INSTRUCTLY
+                </h1>
 
                 <div className="relative" ref={dropdownRef}>
                     <div
@@ -624,8 +821,12 @@ function Navbar() {
                             <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border border-white" />
                         </div>
                         <div>
-                            <h1 className="text-base font-semibold text-gray-800">Hi, {auth.user.name}</h1>
-                            <p className="text-gray-500 text-sm capitalize">{auth.user.role}</p>
+                            <h1 className="text-base font-semibold text-gray-800">
+                                Hi, {auth.user.name}
+                            </h1>
+                            <p className="text-gray-500 text-sm capitalize">
+                                {auth.user.role}
+                            </p>
                         </div>
                     </div>
 
@@ -640,14 +841,27 @@ function Navbar() {
                                 className="absolute right-0 mt-3 w-48 bg-white border border-gray-200 rounded-lg shadow-lg"
                             >
                                 <ul className="py-2 text-gray-700">
-                                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer">
-                                        <User className="w-5 h-5 mr-2 text-gray-600" /> Profile
+                                    <li
+                                        className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer"
+                                        onClick={() =>
+                                            router.get("/profile")
+                                        }
+                                    >
+                                        <User className="w-5 h-5 mr-2 text-gray-600" />{" "}
+                                        Profile
                                     </li>
-                                    <li className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer">
-                                        <BookOpen className="w-5 h-5 mr-2 text-gray-600" /> Courses
+                                    <li
+                                        className="flex items-center px-4 py-2 hover:bg-gray-100 transition duration-200 cursor-pointer"
+                                        onClick={() =>
+                                            router.get("/dashboard/courses")
+                                        }
+                                    >
+                                        <BookOpen className="w-5 h-5 mr-2 text-gray-600 cursor-pointer" />{" "}
+                                        Courses
                                     </li>
                                     <li className="flex items-center px-4 py-2 hover:bg-red-100 text-red-500 transition duration-200 cursor-pointer">
-                                        <LogOut className="w-5 h-5 mr-2 text-red-500" /> Sign Out
+                                        <LogOut className="w-5 h-5 mr-2 text-red-500" />{" "}
+                                        Sign Out
                                     </li>
                                 </ul>
                             </motion.div>
@@ -662,13 +876,15 @@ function Navbar() {
 const Dashboard = ({ overallProgress }) => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [sidebarWidth, setSidebarWidth] = useState(SIDEBAR.COLLAPSED_WIDTH);
-    const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(SIDEBAR.DEFAULT_WIDTH);
+    const [lastWidthBeforeCollapse, setLastWidthBeforeCollapse] = useState(
+        SIDEBAR.DEFAULT_WIDTH
+    );
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
     const { auth } = usePage().props;
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
-            <Head title='Dashboard' />
+            <Head title="Dashboard" />
             <Sidebar
                 width={sidebarWidth}
                 isCollapsed={isCollapsed}
@@ -690,10 +906,14 @@ const Dashboard = ({ overallProgress }) => {
                         {/* Welcome Card - Full width on all screens */}
                         <div className="col-span-1 sm:col-span-12">
                             <div className="bg-gradient-to-r from-[#1a1b41] to-[#2d2e6f] rounded-lg sm:rounded-xl p-4 sm:p-6 text-white shadow-lg">
-                                <h2 className="text-lg sm:text-xl font-semibold mb-2">Welcome back, {auth.user.name} 👋</h2>
+                                <h2 className="text-lg sm:text-xl font-semibold mb-2">
+                                    Welcome back, {auth.user.name} 👋
+                                </h2>
                                 <p className="text-white/85 text-xs sm:text-sm max-w-2xl leading-relaxed">
-                                    Track your learning progress, continue where you left off, and achieve your goals.
-                                    You've completed {overallProgress}% of your weekly learning objectives.
+                                    Track your learning progress, continue where
+                                    you left off, and achieve your goals. You've
+                                    completed {overallProgress}% of your weekly
+                                    learning objectives.
                                 </p>
                             </div>
                         </div>
@@ -705,7 +925,7 @@ const Dashboard = ({ overallProgress }) => {
 
                         {/* Statistics Card - Full width on mobile, 4 cols on lg */}
                         <div className="col-span-1 sm:col-span-12 lg:col-span-4">
-                            <StatisticsCard overallProgress={overallProgress}/>
+                            <StatisticsCard overallProgress={overallProgress} />
                         </div>
 
                         {/* Activity List - Always full width */}
