@@ -4,38 +4,67 @@ import { Clock, Video, Users, Heart, Share2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
-const LoadingSkeleton = () => (
-    <div className="relative h-full rounded-2xl overflow-hidden bg-white shadow-md animate-pulse">
-        {/* Image Skeleton */}
-        <div className="aspect-video bg-gray-200" />
-
-        <div className="p-6">
-            {/* Title Skeleton */}
-            <div className="h-7 bg-gray-200 rounded w-3/4 mb-3" />
-
-            {/* Description Skeleton */}
-            <div className="space-y-2 mb-6">
-                <div className="h-4 bg-gray-200 rounded w-full" />
-                <div className="h-4 bg-gray-200 rounded w-5/6" />
-                <div className="h-4 bg-gray-200 rounded w-4/6" />
+const LoadingSkeleton = ({ viewMode }) => {
+    if (viewMode === 'list') {
+        return (
+            <div className="relative rounded-xl overflow-hidden bg-white shadow-md animate-pulse">
+                <div className="flex">
+                    <div className="w-1/4">
+                        <div className="aspect-video bg-gray-200" />
+                    </div>
+                    <div className="w-3/4 p-6">
+                        <div className="h-7 bg-gray-200 rounded w-3/4 mb-3" />
+                        <div className="space-y-2 mb-4">
+                            <div className="h-4 bg-gray-200 rounded w-full" />
+                            <div className="h-4 bg-gray-200 rounded w-5/6" />
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="flex gap-4">
+                                {[1, 2, 3].map((i) => (
+                                    <div key={i} className="h-6 w-24 bg-gray-200 rounded" />
+                                ))}
+                            </div>
+                            <div className="h-10 w-24 bg-gray-200 rounded-full" />
+                        </div>
+                    </div>
+                </div>
             </div>
+        );
+    }
 
-            {/* Stats Skeleton */}
-            <div className="grid grid-cols-3 gap-2 mb-6">
-                {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-6 bg-gray-200 rounded" />
-                ))}
-            </div>
+    return (
+        <div className="relative h-full rounded-2xl overflow-hidden bg-white shadow-md animate-pulse">
+            {/* Image Skeleton */}
+            <div className="aspect-video bg-gray-200" />
 
-            {/* Price Skeleton */}
-            <div className="flex justify-end">
-                <div className="h-10 w-24 bg-gray-200 rounded-full" />
+            <div className="p-6">
+                {/* Title Skeleton */}
+                <div className="h-7 bg-gray-200 rounded w-3/4 mb-3" />
+
+                {/* Description Skeleton */}
+                <div className="space-y-2 mb-6">
+                    <div className="h-4 bg-gray-200 rounded w-full" />
+                    <div className="h-4 bg-gray-200 rounded w-5/6" />
+                    <div className="h-4 bg-gray-200 rounded w-4/6" />
+                </div>
+
+                {/* Stats Skeleton */}
+                <div className="grid grid-cols-3 gap-2 mb-6">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="h-6 bg-gray-200 rounded" />
+                    ))}
+                </div>
+
+                {/* Price Skeleton */}
+                <div className="flex justify-end">
+                    <div className="h-10 w-24 bg-gray-200 rounded-full" />
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
-const CourseCard = ({ course }) => {
+const CourseCard = ({ course, viewMode }) => {
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [showShareTooltip, setShowShareTooltip] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
@@ -156,6 +185,116 @@ const CourseCard = ({ course }) => {
             </div>
         </div>
     );
+
+    if (viewMode === 'list') {
+        return (
+            <div className="relative">
+                <Link href={course.url} className="block group">
+                    <div className="relative rounded-xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300">
+                        <div className="flex">
+                            {/* Image Section */}
+                            <div className="w-1/4">
+                                <div className="relative aspect-video">
+                                    <img
+                                        src={course.image}
+                                        alt={course.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Content Section */}
+                            <div className="w-3/4 p-6">
+                                <div className="flex justify-between items-start">
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                        {course.title}
+                                    </h3>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={handleBookmark}
+                                            className="p-2 rounded-full bg-white/90 hover:bg-white transition-colors"
+                                        >
+                                            <Heart
+                                                className={`w-5 h-5 ${isBookmarked ? 'fill-pink-500 text-pink-500' : 'text-gray-600'}`}
+                                            />
+                                        </button>
+                                        <button
+                                            onClick={handleShare}
+                                            className="p-2 rounded-full bg-white/90 hover:bg-white transition-colors relative"
+                                        >
+                                            <Share2 className="w-5 h-5 text-gray-600" />
+                                            {showShareTooltip && (
+                                                <div className="absolute -bottom-10 right-0 bg-gray-800 text-white text-xs px-2 py-1 rounded">
+                                                    Copied!
+                                                </div>
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <p className="text-gray-600 mb-4">{course.description}</p>
+
+                                <div className="flex justify-between items-center">
+                                    <div className="flex gap-4">
+                                        <div className="flex items-center text-gray-500 bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors">
+                                            <Clock className="w-4 h-4 mr-2 text-blue-500" />
+                                            <span className="text-sm">{course.duration}</span>
+                                        </div>
+                                        <div className="flex items-center text-gray-500 bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors">
+                                            <Video className="w-4 h-4 mr-2 text-purple-500" />
+                                            <span className="text-sm">{course.videos}</span>
+                                        </div>
+                                        <div className="flex items-center text-gray-500 bg-gray-50 rounded-lg p-2 hover:bg-gray-100 transition-colors">
+                                            <Users className="w-4 h-4 mr-2 text-green-500" />
+                                            <span className="text-sm">{course.students}</span>
+                                        </div>
+                                    </div>
+                                    {isEnrolled ? (
+                                        <div
+                                            className="
+                                                px-6 py-2 rounded-full text-lg font-bold text-center
+                                                bg-gradient-to-r from-purple-500 to-purple-700 text-white
+                                                transform transition-all duration-300 hover:scale-105
+                                            "
+                                        >
+                                            <Link href="/dashboard" className="w-full block">
+                                                Go To Dashboard
+                                            </Link>
+                                        </div>
+                                    ) : (
+                                        <div
+                                            className={`
+                                                relative px-6 py-2 rounded-full text-lg font-bold text-center overflow-hidden
+                                                transition-all duration-300 transform
+                                                ${course.price == 0
+                                                    ? "bg-gradient-to-r from-green-400 to-emerald-500 text-white"
+                                                    : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white"
+                                                }
+                                                group-hover:scale-105
+                                            `}
+                                        >
+                                            <div className="relative z-10 transition-transform duration-300 group-hover:translate-x-[-100%]">
+                                                {course.price == 0 ? "Free!" : `$${course.price}`}
+                                            </div>
+                                            <div className="absolute inset-0 flex items-center justify-center transition-transform duration-300 transform translate-x-[100%] group-hover:translate-x-0">
+                                                {course.price == 0 ? "Enroll Now" : "Buy Now!"}
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+
+                {showPreview && (
+                    usePortal
+                        ? createPortal(<PreviewContent />, document.body)
+                        : <PreviewContent />
+                )}
+            </div>
+        );
+    }
 
     return (
         <div
@@ -332,7 +471,7 @@ const NoResults = ({ query, category }) => {
     );
 };
 
-export default function CourseGrid({ courses, isLoading }) {
+export default function CourseGrid({ courses, viewMode, isLoading }) {
     const { url } = usePage();
     const searchParams = new URLSearchParams(url.split('?')[1]);
     const query = searchParams.get('search') || '';
@@ -340,16 +479,20 @@ export default function CourseGrid({ courses, isLoading }) {
 
     if (isLoading) {
         return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-16">
+            <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'} gap-8 my-16`}>
                 {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <LoadingSkeleton key={i} />
+                    <LoadingSkeleton key={i} viewMode={viewMode} />
                 ))}
             </div>
         );
     }
 
+    const gridClasses = viewMode === 'grid'
+        ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-16'
+        : 'space-y-6 my-16';
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 my-16">
+        <div className={gridClasses}>
             {courses.length > 0 ? (
                 courses.map((course) => (
                     <div
@@ -359,7 +502,7 @@ export default function CourseGrid({ courses, isLoading }) {
                             animationDelay: `${courses.indexOf(course) * 100}ms`
                         }}
                     >
-                        <CourseCard course={course} />
+                        <CourseCard course={course} viewMode={viewMode} />
                     </div>
                 ))
             ) : (
